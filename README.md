@@ -11,18 +11,18 @@ Example of `App.svelte`:
 <Route path='/'>
 	<h1>Hello, it's main 'pagе'!</h1>
 
-   <button on:click={() => navigate('/another')}>
-      Go to another path
-   </button>
+	<button on:click={() => navigate('/another')}>
+		Go to another path
+	</button>
 </Route>
 
 
 <Route path='/another'>
 	<h1>You on another 'page'!</h1>
 
-   <button on:click={() => navigate('/another#hidden')}>
-      Show hidden element
-   </button>
+	<button on:click={() => navigate('/another#hidden')}>
+		Show hidden element
+	</button>
 </Route>
 
 
