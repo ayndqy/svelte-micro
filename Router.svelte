@@ -2,7 +2,7 @@
 	import { writable } from 'svelte/store';
 
 	export const 	pathname = writable(window.location.pathname),
-						hashname = writable(window.location.hash.slice(1));
+			hashname = writable(window.location.hash.slice(1));
 
 	export const navigate = (url) => {
 		history.pushState(null, document.title, url);
