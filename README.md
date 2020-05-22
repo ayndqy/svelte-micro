@@ -2,7 +2,7 @@
 ### Minimalistic svelte router in one component
 
 Example of `App.svelte`:
-```
+```svelte
 <script>
   import Route, {
     pathname,
