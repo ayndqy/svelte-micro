@@ -4,29 +4,33 @@
 Example of `App.svelte`:
 ```
 <script>
-	import Route, { navigate } from './Router.svelte';
+  import Route, {
+    pathname,
+    params,
+    hashname,
+    navigate,
+  } from './Router.svelte'
 </script>
 
+<Route path="/">
+  <h1>Hello, it's main 'pagе'!</h1>
 
-<Route path='/'>
-	<h1>Hello, it's main 'pagе'!</h1>
-
-	<button on:click={() => navigate('/another')}>
-		Go to another path
-	</button>
+  <button on:click={() => navigate('/another?text=lol')}>
+    Go to another path
+  </button>
 </Route>
 
+<Route path="/another">
+  <h1>You on another 'page'!</h1>
+  <p>Text from params: {$params.get('text')}</p>
 
-<Route path='/another'>
-	<h1>You on another 'page'!</h1>
-
-	<button on:click={() => navigate('/another#hidden')}>
-		Show hidden element
-	</button>
+  <button on:click={() => navigate('/another?text=lol#hidden-text')}>
+    Show hidden element
+  </button>
+  <button on:click={() => window.history.back()}>Back</button>
 </Route>
 
-
-<Route path='/another' hash='hidden'>
-	<p>It's very hidden text._.</p>
+<Route path="/another" hash="hidden-text">
+  <p>It's very hidden text._.</p>
 </Route>
 ```
