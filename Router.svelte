@@ -1,33 +1,74 @@
-<script context='module'>
-	import { writable } from 'svelte/store';
+<script context="module">
+  import { readable } from 'svelte/store'
 
-	export const 	pathname = writable(window.location.pathname),
-			hashname = writable(window.location.hash.slice(1));
+  // Pathname store
+  export const pathname = readable(window.location.pathname, (set) => {
+    const setPathname = () => {
+      set(window.location.pathname)
+    }
 
-	export const navigate = (url) => {
-		history.pushState(null, document.title, url);
-		window.dispatchEvent(new Event('popstate'));
-	};
+    window.addEventListener('popstate', setPathname)
+
+    return function stop() {
+      window.removeEventListener('popstate', setPathname)
+    }
+  })
+
+  // Hashname store
+  export const hashname = readable(window.location.hash.slice(1), (set) => {
+    const setHashname = () => {
+      set(window.location.hash.slice(1))
+    }
+
+    window.addEventListener('popstate', setHashname)
+
+    return function stop() {
+      window.removeEventListener('popstate', setHashname)
+    }
+  })
+
+  // Params store
+  export const params = readable(
+    new URL(window.location).searchParams,
+    (set) => {
+      const setParams = () => {
+        set(new URL(window.location).searchParams)
+      }
+
+      window.addEventListener('popstate', setParams)
+
+      return function stop() {
+        window.removeEventListener('popstate', setParams)
+      }
+    },
+  )
+
+  // Navigate function
+  export const navigate = (url, replaceState) => {
+    if (replaceState) {
+      history.replaceState(null, document.title, url)
+    } else {
+      history.pushState(null, document.title, url)
+    }
+    window.dispatchEvent(new Event('popstate'))
+  }
 </script>
 
 <script>
-	export let 	path = undefined,
-					hash = undefined,
-					title = document.title;
+  export let path = null
+  export let hash = null
+  export let title = document.title
 
-	$: routeIsActive = 
-		path === undefined || path === $pathname && 
-		hash === undefined || hash === $hashname 
-			? true : false;
+  // Route
+  $: routeIsActive =
+    path === null || (path === $pathname && hash === null) || hash === $hashname
+      ? true
+      : false
 
-	$: routeIsActive ? document.title = title : null
-
-	window.addEventListener('popstate', () => {
-		$pathname = window.location.pathname;
-		$hashname = window.location.hash.slice(1);
-	});
+  // Title
+  $: routeIsActive ? (document.title = title) : null
 </script>
 
 {#if routeIsActive}
-	<slot></slot>
+  <slot />
 {/if}
