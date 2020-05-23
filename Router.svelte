@@ -29,10 +29,10 @@
 
   // Params store
   export const params = readable(
-    new URL(window.location).searchParams,
+    new URL(document.location).searchParams,
     (set) => {
       const setParams = () => {
-        set(new URL(window.location).searchParams)
+        set(new URL(document.location).searchParams)
       }
 
       window.addEventListener('popstate', setParams)
@@ -59,16 +59,19 @@
   export let hash = null
   export let title = document.title
 
-  // Route
-  $: routeIsActive =
-    path === null || (path === $pathname && hash === null) || hash === $hashname
-      ? true
-      : false
+  // Path
+  $: isPathActive = path === null || path === $pathname
+
+  // Hash
+  $: isHashActive = hash === null || hash === $hashname
+
+  // Params initialisation
+  $params
 
   // Title
-  $: routeIsActive ? (document.title = title) : null
+  $: isPathActive && isHashActive ? (document.title = title) : null
 </script>
 
-{#if routeIsActive}
+{#if isPathActive && isHashActive}
   <slot />
 {/if}
