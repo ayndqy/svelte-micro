@@ -6,8 +6,8 @@ Example of `App.svelte`:
 <script>
   import Route, {
     pathname,
-    params,
     hashname,
+    params,
     navigate,
   } from './Router.svelte'
 </script>
