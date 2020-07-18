@@ -20,7 +20,7 @@ Just download this file to your project folder and import it to the component yo
 
 
 ## 🔗 Navigation
-You can navigate with
+You can navigate with:
 - native link element `<a href="/path">...</a>`
 - or navigate router method [`router.navigate(path, replaceState)`](#-router-api)
 
