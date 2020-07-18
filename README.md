@@ -22,7 +22,7 @@ Just download this file to your project folder and import it to the component yo
 ## 🔗 Navigation
 You can navigate with
 - native link element `<a href="/path">...</a>`
-- or navigate router method [`router.navigate(path, replaceState)`](#⚙-Router-API)
+- or navigate router method [`router.navigate(path, replaceState)`](#-router-api)
 
 `external` atribute in link prevents SPA routing.
 
