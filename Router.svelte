@@ -1,8 +1,8 @@
 <script context="module">
   import { writable } from 'svelte/store'
 
-  // Params to JSON object
-  const paramsToJSON = (search) => {
+  // Query to JSON object
+  const queryToJSON = (search) => {
     if (search) {
       return JSON.parse(
         '{"' +
@@ -17,33 +17,21 @@
     }
   }
 
-  // Path to Array
-  export const pathToArray = (path) => {
-    let pathArray = path.split('/')
-    pathArray.shift()
-    for (let i = 0; i < pathArray.length; i++) pathArray[i] = '/' + pathArray[i]
-    if (pathArray[pathArray.length - 1] !== '/') pathArray = [...pathArray, '/']
-    if (!pathArray.length) pathArray = ['/']
-    return pathArray
+  // Get current path, hash, query
+  const getLocation = () => {
+    return {
+      path: location.pathname,
+      hash: location.hash.slice(1),
+      query: queryToJSON(location.search),
+    }
   }
 
   // Router store
-  export const router = createRouterStore()
-
   function createRouterStore() {
-    const { subscribe, set } = writable({
-      path: location.pathname,
-      hash: location.hash,
-      params: paramsToJSON(location.search),
-    })
+    const { subscribe, set } = writable(getLocation())
 
     // onPopState change store values
-    window.onpopstate = () =>
-      set({
-        path: location.pathname,
-        hash: location.hash,
-        params: paramsToJSON(location.search),
-      })
+    window.onpopstate = () => set(getLocation())
 
     // onClick link
     window.onclick = (e) => {
@@ -71,98 +59,85 @@
       },
     }
   }
+
+  export const router = createRouterStore()
+
+  // Path to Array
+  export const pathToArray = (path) => {
+    let pathArray = path.split('/')
+    pathArray.shift()
+    for (let i = 0; i < pathArray.length; i++) pathArray[i] = '/' + pathArray[i]
+    if (pathArray[pathArray.length - 1] !== '/') pathArray = [...pathArray, '/']
+    if (!pathArray.length) pathArray = ['/']
+    return pathArray
+  }
 </script>
 
 <script>
   import { getContext, setContext, afterUpdate } from 'svelte'
 
   export let fallback = false
-  export let path = fallback ? null : '/'
+  export let path = !fallback ? '/' : null
   export let title = null
 
-  let route
-  let routeContext = getContext('route')
+  let routeContext = getContext('routeContext')
   let depth = routeContext ? routeContext.depth + 1 : -1
-  let activeChildren = []
-  let activateFallback
-  let isFallbackActive
-  let isPathActive
-
-  route = {
-    fallback,
-    path,
-    title,
-    depth,
-    addChild: (path) => {
-      activeChildren = [path, ...activeChildren]
-    },
-    addFallbackActivator: (func) => {
-      activateFallback = func
-    },
-  }
+  let isActive = false
+  let children = []
+  let fallbackToggle = null
 
   // Context for child routes
-  setContext('route', route)
+  setContext('routeContext', {
+    fallback,
+    path,
+    depth,
+    addChild: (path, isActive) =>
+      isActive ? (children = [...children, path]) : null,
+    setFallbackToggler: (func) => (fallbackToggle = func),
+  })
 
-  // Errors
-  // If path don't begin from '/'
-  if (route.path && route.path.substring(0, 1) !== '/') {
-    throw new Error(
-      `'${route.path}' is incorrect path. Path must begin from '/'`
+  // On props change trigger $router.path
+  $: [fallback, path, title],
+    setTimeout(() =>
+      router.navigate(location.pathname + location.search + location.hash, true)
     )
-  }
-  // If fallback Route not in Route component
-  if (route.fallback && route.depth < 0) {
-    throw new Error(`<Route fallback> must be inside <Route> component`)
-  }
-  // If Route component in fallback Route
-  if (routeContext && routeContext.fallback) {
-    throw new Error(`<Route> component can't be inside <Route fallback>`)
-  }
 
-  // Route dynamic properties
-  $: route = { fallback, path, title, depth }
+  // On $router.path change reset values
+  $: [$router.path],
+    (() => {
+      isActive = false
+      children = []
+      fallbackToggle = null
+    })()
 
-  // On $router.path change reset
-  $: if ($router.path) {
-    activeChildren = []
-    isFallbackActive = false
-  }
-  // Add active child to parent
-  $: if ($router.path && routeContext && !route.fallback && isActive)
-    routeContext.addChild(path)
-  // Аdd fallback activator to parent
-  $: if ($router.path && routeContext && route.fallback)
-    routeContext.addFallbackActivator(() => (isFallbackActive = true))
+  // Is path equal router path
+  $: isActive = !fallback
+    ? path === pathToArray($router.path)[depth] || depth < 0
+    : isActive
 
-  // Array with routes in path
-  $: pathArray = pathToArray($router.path)
+  // On $router.path change
+  $: [$router.path],
+    (() => {
+      // For parental route
+      if (routeContext) {
+        // If current route not fallback
+        if (!fallback) {
+          // Add child
+          routeContext.addChild(path, isActive)
+        } else {
+          // Set fallback toggler
+          routeContext.setFallbackToggler((value) => (isActive = value))
+        }
+      }
 
-  // Is fallback can exist (depth)
-  $: isFallbackActive = route.fallback
-    ? route.depth < pathArray.length || pathArray.length === 0
-      ? isFallbackActive
-      : false
-    : false
+      // Title change
+      if (title && isActive) document.title = title
+    })()
 
-  // Is Route path equal router path
-  $: isPathActive = !route.fallback
-    ? route.path === pathArray[route.depth] || route.depth < 0
-    : false
-
-  // If Route is active
-  $: isActive = isPathActive || isFallbackActive
-
-  // Title change
-  $: $router.path && route.title && isActive
-    ? (document.title = route.title)
-    : null
-
-  // Activate fallback
+  // Fallback activate
   afterUpdate(() => {
-    Boolean(activateFallback) && activeChildren.length === 0
-      ? activateFallback()
-      : null
+    if (fallbackToggle)
+      children.length === 0 ? fallbackToggle(true) : fallbackToggle(false)
   })
 </script>
 
