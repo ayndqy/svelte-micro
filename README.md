@@ -1,5 +1,5 @@
 # One Component Svelte Router
-✨ Lightweight minimalistic svelte router in one component
+Lightweight minimalistic svelte router in one component
 
 ## 📔 Docs
 - [Getting started](#-getting-started)
@@ -26,7 +26,7 @@ You can navigate with
 
 `external` atribute in link prevents SPA routing.
 
-### Example:
+#### Example:
 ```svelte
 <a href="/test">Go to '/test' route</a>
 
@@ -50,7 +50,7 @@ Default properties:
     title={null} />
 ```
 
-Example of `App.svelte`:
+#### Example of `App.svelte`:
 ```svelte
 <script>
   import Route, { router } from './components/Router.svelte'
