@@ -2,11 +2,11 @@
 ✨ Lightweight minimalistic svelte router in one component
 
 ## Docs
-- [Getting started](#🏁-Getting-started)
-- [Navigation](#🔗-Navigation)
-- [Route Component](#📃-Route-Component)
-- [Router API](#⚙-Router-API)
-- [Anti patterns](#❌-Anti-patterns)
+- [Getting started](#-getting-started)
+- [Navigation](#-navigation)
+- [Route component](#-noute-nomponent)
+- [Router API](#-router-api)
+- [Anti patterns](#-anti-patterns)
 
 ## 🏁 Getting started
 
@@ -40,7 +40,7 @@ You can navigate with
 
 
 
-## 📃 Route Component
+## 📃 Route component
 
 Default properties:
 ```svelte
