@@ -1,7 +1,7 @@
 # One Component Svelte Router
 ✨ Lightweight minimalistic svelte router in one component
 
-## Docs
+## 📔 Docs
 - [Getting started](#-getting-started)
 - [Navigation](#-navigation)
 - [Route component](#-noute-nomponent)
