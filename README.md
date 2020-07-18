@@ -87,7 +87,7 @@ Default properties:
     <nav>
       <a href="/portfolio">Introduction</a>
       <a href="/portfolio/sites">Sites</a>
-      <a href="/portfolio/photos">Photos</a>
+      <a href="/portfolio/apps">Apps</a>
     </nav>
   </Route>
 
