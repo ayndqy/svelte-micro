@@ -96,6 +96,17 @@
     setFallbackToggler: (func) => (fallbackToggle = func),
   })
 
+  // Errors
+  // If path don't begin from '/'
+  if (route.path && route.path.substring(0, 1) !== '/')
+    throw new Error(`'${route.path}' is invalid path. Path must begin from '/'`)
+  // If fallback Route not in Route component
+  if (route.fallback && route.depth < 0)
+    throw new Error(`<Route fallback> must be inside <Route> component`)
+  // If Route component in fallback Route
+  if (routeContext && routeContext.fallback)
+    throw new Error(`<Route> component can't be inside <Route fallback>`)
+
   // On props change trigger $router.path
   $: [fallback, path, title],
     setTimeout(() =>
