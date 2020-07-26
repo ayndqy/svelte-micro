@@ -62,6 +62,11 @@
 
   export const router = createRouterStore()
 
+  // Error function
+  export const error = (text) => {
+    throw new Error(text)
+  }
+
   // Path to Array
   export const pathToArray = (path) => {
     let pathArray = path.split('/')
@@ -80,14 +85,14 @@
   export let path = !fallback ? '/' : null
   export let title = null
 
-  let routeContext = getContext('routeContext')
-  let depth = routeContext ? routeContext.depth + 1 : -1
+  let context = getContext('context')
+  let depth = context ? context.depth + 1 : -1
   let isActive = false
   let children = []
   let fallbackToggle = null
 
   // Context for child routes
-  setContext('routeContext', {
+  setContext('context', {
     fallback,
     path,
     depth,
@@ -99,13 +104,16 @@
   // Errors
   // If path don't begin from '/'
   if (path && path.substring(0, 1) !== '/')
-    throw new Error(`'${path}' is invalid path. Path must begin from '/'`)
+    error(`'${path}' is invalid path. Path must begin from '/'`)
+  // If route with custom path outside root route
+  if (!context && path !== '/')
+    error(`<Route path="${path}" /> can't be outside root <Route> component`)
   // If fallback Route not in Route component
   if (fallback && depth < 0)
-    throw new Error(`<Route fallback> must be inside <Route> component`)
+    error(`<Route fallback> must be inside <Route> component`)
   // If Route component in fallback Route
-  if (routeContext && routeContext.fallback)
-    throw new Error(`<Route> component can't be inside <Route fallback>`)
+  if (context && context.fallback)
+    error(`<Route> component can't be inside <Route fallback>`)
 
   // On props change trigger $router.path
   $: [fallback, path, title],
@@ -130,14 +138,14 @@
   $: [$router.path],
     (() => {
       // For parental route
-      if (routeContext) {
+      if (context) {
         // If current route not fallback
         if (!fallback) {
           // Add child
-          routeContext.addChild(path, isActive)
+          context.addChild(path, isActive)
         } else {
           // Set fallback toggler
-          routeContext.setFallbackToggler((value) => (isActive = value))
+          context.setFallbackToggler((value) => (isActive = value))
         }
       }
 
@@ -155,3 +163,9 @@
 {#if isActive}
   <slot />
 {/if}
+
+<style>
+  :global(a *) {
+    pointer-events: none;
+  }
+</style>
