@@ -1,4 +1,4 @@
-# One Component Svelte Router
+# Svelte One Component Router
 Lightweight minimalistic svelte router in one component
 
 ## 📔 Docs
