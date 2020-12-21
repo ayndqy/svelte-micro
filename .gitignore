@@ -1,0 +1,4 @@
+.DS_Store
+.prettierrc
+node_modules
+/dist/
