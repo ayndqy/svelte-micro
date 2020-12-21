@@ -1,6 +1,6 @@
 {
   "name": "svelte-ocr",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Light one-component router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -16,7 +16,6 @@
     "svelte",
     "router"
   ],
-
   "svelte": "src/index.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
