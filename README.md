@@ -1,28 +1,101 @@
-# Svelte One Component Router
+# Svelte Micro
 Light one-component router for Svelte.
+
 
 
 ## Table of content
 - [Installation](#installation)
-- [Example code](#example-code)
+- [Navigation](#navigation)
+- [Options](#options)
 - [Route component](#route-component)
+- [Methods](#methods)
 - [Stores](#stores)
-- [Router methods](#router-methods)
-- [Router options](#router-options)
+- [Example code](#example-code)
+
 
 
 ## Installation
-Package: [`svelte-ocr`](https://www.npmjs.com/package/svelte-ocr)
+Package: [`svelte-micro`](https://www.npmjs.com/package/svelte-micro)
 ```
-$ npm i -D svelte-ocr
+$ npm i -D svelte-micro
 ```
+
+
+
+## Navigation
+```svelte
+<script>
+  import { router } from 'svelte-micro'
+</script>
+
+<a href="/path">Internal link</a>
+<a href="https://example.com" external>External link</a>
+
+<button on:click={() => router.push('/path')}>Push link to history</button>
+<button on:click={() => router.replace('/path')}>Replace link in history</button>
+```
+
+
+
+## Options
+Default values:
+```javascript
+router.setOptions({
+  onClickReloadPrevent: true
+})
+```
+
+
+
+## Route component
+```javascript
+import { Route } from 'svelte-micro'
+```
+Default values:
+```svelte
+<Route
+  fallback={false}
+  path="/"
+/>
+```
+
+
+
+## Methods
+```javascript
+import { router } from 'svelte-micro'
+```
+- #### `router.push(href = '/')`
+  Push new url to history
+- #### `router.replace(href = '/')`
+  Replace url in history
+- #### `router.setOptions(changedOptions = {})`
+  Set [options](#options) for router.
+
+
+
+## Stores
+You can subscribe to get the path, hash, query changing. It's read only.
+```svelte
+<script>
+import { path, query, hash  } from 'svelte-micro'
+</script>
+
+Current path is {$path}
+Current query is {$query}
+Current hash is {$hash}
+```
+- #### `$path`
+- #### `$query`
+- #### `$hash`
+
 
 
 ## Example code
-This code shows the capabilities of `svelte-ocr`.
+This code shows the capabilities of `svelte-micro`.
 ```svelte
 <script>
-  import { Route } from "svelte-ocr";
+  import { Route } from "svelte-micro";
 </script>
 
 <Route>
@@ -31,8 +104,6 @@ This code shows the capabilities of `svelte-ocr`.
     <a href="/">Home</a>
     <a href="/portfolio">Portfolio</a>
     <a href="/about-us/story">Our story</a>
-    <a href="/about-us/team">Our team</a>
-    <a href="/nevermind">Fallback</a>
   </nav>
 
   <!-- Will be shown only when the page path is equal to the '/' -->
@@ -48,7 +119,6 @@ This code shows the capabilities of `svelte-ocr`.
       <h2>Portfolio main page</h2>
       <a href="/portfolio/sites">Sites</a>
       <a href="/portfolio/apps">Apps</a>
-      <a href="/portfolio/nevermind">Fallback</a>
     </Route>
 
     <Route path="/sites">
@@ -71,56 +141,9 @@ This code shows the capabilities of `svelte-ocr`.
     <h1>Our story</h1>
   </Route>
 
-  <Route path="/about-us/team">
-    <h1>Our team</h1>
-  </Route>
-
   <Route fallback>
     <h1>Route not found :(</h1>
     <a href="/">Back to home</a>
   </Route>
 </Route>
-```
-
-
-## Route component
-```javascript
-import { Route } from 'svelte-ocr'
-```
-Default values:
-```svelte
-<Route
-  fallback={false}
-  path="/"
-/>
-```
-
-
-## Stores
-```javascript
-import { path, hash, query } from 'svelte-ocr'
-```
-- #### `$path`
-- #### `$hash`
-- #### `$query`
-
-
-## Router methods
-```javascript
-import { router } from 'svelte-ocr'
-```
-- #### `router.push(href = '/')`
-  Push new url to history
-- #### `router.replace(href = '/')`
-  Replace url in history
-- #### `router.setOptions(changedOptions = {})`
-  Set options for router.
-
-
-## Router options
-Default values:
-```javascript
-router.setOptions({
-  onClickReloadPrevent: true
-})
 ```

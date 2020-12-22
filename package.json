@@ -1,17 +1,17 @@
 {
-  "name": "svelte-ocr",
-  "version": "0.1.4",
+  "name": "svelte-micro",
+  "version": "0.1.0",
   "description": "Light one-component router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ayndqy/svelte-one-component-router.git"
+    "url": "git+https://github.com/ayndqy/svelte-micro.git"
   },
   "bugs": {
-    "url": "https://github.com/ayndqy/svelte-one-component-router/issues"
+    "url": "https://github.com/ayndqy/svelte-micro/issues"
   },
-  "homepage": "https://github.com/ayndqy/svelte-one-component-router#readme",
+  "homepage": "https://github.com/ayndqy/svelte-micro#readme",
   "keywords": [
     "svelte",
     "router"
