@@ -37,7 +37,7 @@
     },
 
     // Set router options
-    setOptions: (changedOptions) => Object.assign(options, changedOptions),
+    setOptions: (changedOptions = {}) => Object.assign(options, changedOptions),
   }
 
   // onClick reload prevent
