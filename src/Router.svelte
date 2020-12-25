@@ -125,6 +125,12 @@
     !fallback && isActive && (activeChildren = [path, ...activeChildren])
 
   setContext('routeContext', route)
+
+  // Query and hash subscription
+  if (!context) {
+    $query
+    $hash
+  }
 </script>
 
 {#if isActive}

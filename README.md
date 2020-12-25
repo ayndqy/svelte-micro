@@ -15,7 +15,6 @@ Light one-component router for Svelte.
 
 
 ## Installation
-Package: [`svelte-micro`](https://www.npmjs.com/package/svelte-micro)
 ```
 $ npm i -D svelte-micro
 ```
@@ -78,7 +77,7 @@ import { router } from 'svelte-micro'
 You can subscribe to get the path, hash, query changing. It's read only.
 ```svelte
 <script>
-import { path, query, hash  } from 'svelte-micro'
+import { path, query, hash } from 'svelte-micro'
 </script>
 
 Current path is {$path}
