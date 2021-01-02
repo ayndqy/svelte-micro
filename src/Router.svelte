@@ -6,6 +6,8 @@
     onClickReloadPrevent: true,
   }
 
+  let globalPath
+
   const pathToArray = (path) => {
     let pathArray = path.split('/')
     pathArray = pathArray.filter((path) => path !== '')
@@ -13,6 +15,7 @@
     return pathArray
   }
 
+  // Stores
   export const path = readable(location.pathname, (set) =>
     window.addEventListener('popstate', () => set(location.pathname))
   )
@@ -23,6 +26,7 @@
     window.addEventListener('popstate', () => set(location.hash))
   )
 
+  // Methods
   export const router = {
     // Push state to history
     push: (href = '/') => {
@@ -56,7 +60,7 @@
   }
 
   // Component variable name conflict fix
-  const globalPath = path
+  globalPath = path
 </script>
 
 <script>

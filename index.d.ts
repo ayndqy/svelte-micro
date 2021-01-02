@@ -1,7 +1,7 @@
 export declare class Route {
   $$prop_def: {
     path?: string;
-    
+
     fallback?: boolean;
   };
 

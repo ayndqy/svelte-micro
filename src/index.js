@@ -1,2 +1,1 @@
-export { default as Route } from './Router.svelte';
-export * from './Router.svelte';
+export { default as Route, router, path, query, hash } from './Router.svelte';
