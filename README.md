@@ -1,19 +1,23 @@
 # Svelte Micro
+
 Light one-component router for Svelte.
 
 
 
 ## Table of content
+
 - [Installation](#installation)
 - [Example](#example)
 - [Component](#component)
-- [Methods](#methods)
 - [Stores](#stores)
+- [Methods](#methods)
 - [Options](#options)
+- [Tips](#tips)
 
 
 
 ## Installation
+
 ```
 $ npm i -D svelte-micro
 ```
@@ -21,6 +25,7 @@ $ npm i -D svelte-micro
 
 
 ## Example
+
 ```svelte
 <script>
   import { Route } from "svelte-micro";
@@ -75,11 +80,13 @@ $ npm i -D svelte-micro
   </Route>
 </Route>
 ```
+
 This code shows the capabilities of `svelte-micro`.
 
 
 
 ## Component
+
 ```svelte
 <script>
 import { Route } from 'svelte-micro'
@@ -93,10 +100,32 @@ import { Route } from 'svelte-micro'
 
 
 
+## Stores
+
+```svelte
+<script>
+  import { path, query, hash } from 'svelte-micro'
+</script>
+
+Current path is {$path}
+Current query is {$query}
+Current hash is {$hash}
+```
+
+- **`$path`** 
+
+- **`$query`**
+
+- **`$hash`**
+
+
+
 ## Methods
+
 ```javascript
 import { router } from 'svelte-micro'
 ```
+
 - **`router.push(href = '/')`**\
   Push new url to history
 
@@ -108,25 +137,8 @@ import { router } from 'svelte-micro'
 
 
 
-## Stores
-```svelte
-<script>
-  import { path, query, hash } from 'svelte-micro'
-</script>
-
-Current path is {$path}
-Current query is {$query}
-Current hash is {$hash}
-```
-- **`$path`** 
-
-- **`$query`**
-
-- **`$hash`**
-
-
-
 ## Options
+
 ```javascript
 import { router } from 'svelte-micro'
 
@@ -134,3 +146,24 @@ router.setOptions({
   onClickReloadPrevent: true
 })
 ```
+
+
+
+## Tips
+
+
+### Scroll behavior control
+
+```javascript
+import { path } from 'svelte-micro'
+
+// Disable browser scroll behavior control
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+// On path change reset scroll position
+path.subscribe(() => window.scrollTo(0, 0))
+```
+
+By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own.

@@ -59,6 +59,11 @@
     }
   }
 
+  // Initial subscription
+  path.subscribe(() => {})
+  query.subscribe(() => {})
+  hash.subscribe(() => {})
+
   // Component variable name conflict fix
   globalPath = path
 </script>
@@ -92,7 +97,7 @@
   $: depth = (!fallback ? pathToArray(path).length : 1) + ($context?.depth ?? 0)
 
   // When these values change:
-  $: ($globalPath, fallback, path, depth),
+  $: [$globalPath, fallback, path, depth],
     (() => {
       // Reset
       isActive = false
@@ -129,12 +134,6 @@
     !fallback && isActive && (activeChildren = [path, ...activeChildren])
 
   setContext('routeContext', route)
-
-  // Query and hash subscription
-  if (!context) {
-    $query
-    $hash
-  }
 </script>
 
 {#if isActive}
