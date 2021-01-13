@@ -1,27 +1,50 @@
 <script context="module">
-  import { getContext, setContext } from 'svelte'
+  import { onDestroy, getContext, setContext } from 'svelte'
   import { writable, readable } from 'svelte/store'
 
   let options = {
     onClickReloadPrevent: true,
   }
 
-  let globalPath
-
   const pathToArray = (path) => {
     let pathArray = path.split('/')
+
     pathArray = pathArray.filter((path) => path !== '')
+
     for (let i = 0; i < pathArray.length; i++) pathArray[i] = '/' + pathArray[i]
+
     return pathArray
+  }
+
+  const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
+    if (fallback) {
+      return (
+        pathToArray(globalPath).length > depth &&
+        !contextRoute.hasActiveChildRoutes
+      )
+    } else {
+      if (path === '/') {
+        return !contextRoute || pathToArray(globalPath).length === depth
+      } else {
+        let routePathScope = ''
+
+        for (let i = depth - pathToArray(path).length; i < depth; i++)
+          routePathScope = routePathScope + pathToArray(globalPath)[i]
+
+        return path === routePathScope
+      }
+    }
   }
 
   // Stores
   export const path = readable(location.pathname, (set) =>
     window.addEventListener('popstate', () => set(location.pathname))
   )
+
   export const query = readable(location.search, (set) =>
     window.addEventListener('popstate', () => set(location.search))
   )
+
   export const hash = readable(location.hash, (set) =>
     window.addEventListener('popstate', () => set(location.hash))
   )
@@ -64,8 +87,7 @@
   query.subscribe(() => {})
   hash.subscribe(() => {})
 
-  // Component variable name conflict fix
-  globalPath = path
+  let globalPath = path
 </script>
 
 <script>
@@ -74,66 +96,52 @@
 
   let depth = 0
   let isActive = false
-  let activeChildren = []
+  let hasActiveChildRoutes = false
 
-  const context = getContext('routeContext')
+  const contextRoute = getContext('contextRoute')
   const route = writable({})
+  const childRoutes = writable([])
+  const contextChildRoutes = $contextRoute?.childRoutes
+  const routeIndex = $contextChildRoutes?.length
 
-  // Errors
   $: {
     if (path && path.substring(0, 1) !== '/')
       throw new Error(`'${path}' is invalid path. Path must starts from '/'`)
-    if (fallback && !context)
+    if (fallback && !contextRoute)
       throw new Error(`<Route fallback> can't be outside root <Route>`)
-    if (path !== '/' && !context)
+    if (path !== '/' && !contextRoute)
       throw new Error(`<Route path="${path}"> can't be outside root <Route>`)
-    if ($context?.fallback)
-      throw new Error(`<Route> component can't be inside <Route fallback>`)
-    if ($context?.path === '/' && $context?.depth > 0 && path !== '/')
-      console.warn(`<Route path="${path}"> will never be rendered`)
   }
 
-  // Route depth
-  $: depth = (!fallback ? pathToArray(path).length : 1) + ($context?.depth ?? 0)
+  $: depth =
+    (!fallback ? pathToArray(path).length : 0) + ($contextRoute?.depth ?? 0)
 
-  // When these values change:
-  $: [$globalPath, fallback, path, depth],
-    (() => {
-      // Reset
-      isActive = false
-      activeChildren = []
+  $: isActive = isRouteActive($globalPath, $contextRoute, fallback, path, depth)
 
-      // Is route active check
-      if (!fallback) {
-        if (path === '/') {
-          isActive = !context || pathToArray($globalPath).length === depth
-        } else {
-          let routePathScope = ''
+  $: $route = {
+    fallback,
+    path,
+    depth,
+    isActive,
+    childRoutes,
+    hasActiveChildRoutes,
+  }
 
-          for (let i = depth - pathToArray(path).length; i < depth; i++)
-            routePathScope = routePathScope + pathToArray($globalPath)[i]
+  $: contextRoute && ($contextChildRoutes[routeIndex] = $route)
 
-          isActive = path === routePathScope
-        }
-      }
+  $: {
+    hasActiveChildRoutes = false
 
-      // Add child to parental route
-      context?.addChild(fallback, path, isActive)
-    })()
+    for (let i = 0; i < $childRoutes.length; i++) {
+      if (!$childRoutes[i]?.fallback)
+        hasActiveChildRoutes = $childRoutes[i]?.isActive
+      if (hasActiveChildRoutes) break
+    }
+  }
 
-  // Is fallback active check
-  $: if (fallback)
-    isActive =
-      pathToArray($globalPath).length >= depth &&
-      $context.activeChildren.length === 0
+  onDestroy(() => contextRoute && ($contextChildRoutes[routeIndex] = undefined))
 
-  // Context for child routes
-  $: $route = { fallback, path, depth, isActive, activeChildren }
-
-  route.addChild = (fallback, path, isActive) =>
-    !fallback && isActive && (activeChildren = [path, ...activeChildren])
-
-  setContext('routeContext', route)
+  setContext('contextRoute', route)
 </script>
 
 {#if isActive}
