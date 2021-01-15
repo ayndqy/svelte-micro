@@ -92,11 +92,14 @@ This code shows the capabilities of `svelte-micro`.
 import { Route } from 'svelte-micro'
 </script>
 
+<!-- Default props value -->
 <Route
   fallback={false}
   path="/"
 />
 ```
+
+All props are reactive.
 
 
 
@@ -142,6 +145,7 @@ import { router } from 'svelte-micro'
 ```javascript
 import { router } from 'svelte-micro'
 
+// Default values
 router.setOptions({
   onClickReloadPrevent: true
 })

@@ -2,18 +2,27 @@
   import { onDestroy, getContext, setContext } from 'svelte'
   import { writable, readable } from 'svelte/store'
 
-  let options = {
-    onClickReloadPrevent: true,
-  }
-
+  // Functions
   const pathToArray = (path) => {
     let pathArray = path.split('/')
-
     pathArray = pathArray.filter((path) => path !== '')
-
     for (let i = 0; i < pathArray.length; i++) pathArray[i] = '/' + pathArray[i]
-
     return pathArray
+  }
+
+  const getRouteDepth = (fallback, path, contextRoute) => {
+    return (
+      (!fallback ? pathToArray(path).length : 0) + (contextRoute?.depth ?? 0)
+    )
+  }
+
+  const hasActiveRoutes = (routes) => {
+    let hasActiveRoutes = false
+    for (let i = 0; i < routes.length; i++) {
+      hasActiveRoutes = !routes[i]?.fallback && routes[i]?.isActive
+      if (hasActiveRoutes) break
+    }
+    return hasActiveRoutes
   }
 
   const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
@@ -27,24 +36,25 @@
         return !contextRoute || pathToArray(globalPath).length === depth
       } else {
         let routePathScope = ''
-
         for (let i = depth - pathToArray(path).length; i < depth; i++)
           routePathScope = routePathScope + pathToArray(globalPath)[i]
-
         return path === routePathScope
       }
     }
+  }
+
+  // Default options
+  let options = {
+    onClickReloadPrevent: true,
   }
 
   // Stores
   export const path = readable(location.pathname, (set) =>
     window.addEventListener('popstate', () => set(location.pathname))
   )
-
   export const query = readable(location.search, (set) =>
     window.addEventListener('popstate', () => set(location.search))
   )
-
   export const hash = readable(location.hash, (set) =>
     window.addEventListener('popstate', () => set(location.hash))
   )
@@ -71,12 +81,10 @@
   window.onclick = (e) => {
     if (options.onClickReloadPrevent) {
       let target = e.target.closest('a[href]')
-
       if (target === null) return
       if (target.nodeName !== 'A') return
       if (target.getAttribute('external') === '') return
       if (target.getAttribute('external') === 'true') return
-
       router.push(target.getAttribute('href'))
       e.preventDefault()
     }
@@ -94,15 +102,14 @@
   export let fallback = false
   export let path = '/'
 
+  const route = writable({})
+  const contextRoute = getContext('contextRoute')
+  const routeIndex = $contextRoute?.childRoutes?.length
+
   let depth = 0
   let isActive = false
+  let childRoutes = []
   let hasActiveChildRoutes = false
-
-  const contextRoute = getContext('contextRoute')
-  const route = writable({})
-  const childRoutes = writable([])
-  const contextChildRoutes = $contextRoute?.childRoutes
-  const routeIndex = $contextChildRoutes?.length
 
   $: {
     if (path && path.substring(0, 1) !== '/')
@@ -113,11 +120,16 @@
       throw new Error(`<Route path="${path}"> can't be outside root <Route>`)
   }
 
-  $: depth =
-    (!fallback ? pathToArray(path).length : 0) + ($contextRoute?.depth ?? 0)
+  // Route depth
+  $: depth = getRouteDepth(fallback, path, $contextRoute)
 
+  // Is this route active check
   $: isActive = isRouteActive($globalPath, $contextRoute, fallback, path, depth)
 
+  // Is this route has active child routes (for fallback activation)
+  $: hasActiveChildRoutes = hasActiveRoutes(childRoutes)
+
+  // Data for child and context routes
   $: $route = {
     fallback,
     path,
@@ -127,20 +139,14 @@
     hasActiveChildRoutes,
   }
 
-  $: contextRoute && ($contextChildRoutes[routeIndex] = $route)
+  // Children functional
+  $: contextRoute?.updateChildRoute(routeIndex, $route)
 
-  $: {
-    hasActiveChildRoutes = false
+  onDestroy(() => contextRoute?.updateChildRoute(routeIndex, null))
 
-    for (let i = 0; i < $childRoutes.length; i++) {
-      if (!$childRoutes[i]?.fallback)
-        hasActiveChildRoutes = $childRoutes[i]?.isActive
-      if (hasActiveChildRoutes) break
-    }
-  }
+  route.updateChildRoute = (index, route) => (childRoutes[index] = route)
 
-  onDestroy(() => contextRoute && ($contextChildRoutes[routeIndex] = undefined))
-
+  // Context for child routes
   setContext('contextRoute', route)
 </script>
 
