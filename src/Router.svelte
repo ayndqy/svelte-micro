@@ -2,49 +2,6 @@
   import { onDestroy, getContext, setContext } from 'svelte';
   import { writable, readable } from 'svelte/store';
 
-  const pathToArray = (path) => {
-    let pathArray = path.split('/').filter((path) => path !== '');
-
-    for (let i = 0; i < pathArray.length; i++) pathArray[i] = '/' + pathArray[i];
-
-    return pathArray;
-  };
-
-  const getRouteDepth = (fallback, path, contextRoute) => {
-    return (!fallback ? pathToArray(path).length : 0) + (contextRoute?.depth ?? 0);
-  };
-
-  const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
-    if (fallback) {
-      let hasContextActiveChildRoutes = false;
-
-      for (let i = 0; i < contextRoute.childRoutes.length; i++) {
-        hasContextActiveChildRoutes =
-          !contextRoute.childRoutes[i]?.fallback && contextRoute.childRoutes[i]?.isActive;
-
-        if (hasContextActiveChildRoutes) break;
-      }
-
-      return pathToArray(globalPath).length > depth && !hasContextActiveChildRoutes;
-    } else {
-      if (path === '/') {
-        return !contextRoute || pathToArray(globalPath).length === depth;
-      } else {
-        let routePathScope = '';
-
-        for (let i = depth - pathToArray(path).length; i < depth; i++)
-          routePathScope = routePathScope + pathToArray(globalPath)[i];
-
-        return path === routePathScope;
-      }
-    }
-  };
-
-  // Default options
-  let options = {
-    onClickReloadPrevent: true,
-  };
-
   // Stores
   export const path = readable(location.pathname, (set) =>
     window.addEventListener('popstate', () => set(location.pathname))
@@ -74,21 +31,70 @@
     setOptions: (changedOptions = {}) => Object.assign(options, changedOptions),
   };
 
+  const pathToArray = (path) => {
+    let pathArray = path.split('/').filter((path) => path !== '');
+
+    for (let i = 0; i < pathArray.length; i++) {
+      pathArray[i] = '/' + pathArray[i];
+    }
+
+    return pathArray;
+  };
+
+  const getRouteDepth = (fallback, path, contextRoute) => {
+    return (!fallback ? pathToArray(path).length : 0) + (contextRoute?.depth ?? 0);
+  };
+
+  const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
+    if (fallback) {
+      let hasContextActiveRoutes = false;
+
+      for (let i = 0; i < contextRoute.childRoutes.length; i++) {
+        hasContextActiveRoutes =
+          !contextRoute.childRoutes[i]?.fallback && contextRoute.childRoutes[i]?.isActive;
+
+        if (hasContextActiveRoutes) break;
+      }
+
+      return pathToArray(globalPath).length > depth && !hasContextActiveRoutes;
+    } else {
+      if (path === '/') {
+        return !contextRoute || pathToArray(globalPath).length === depth;
+      } else {
+        let routePathScope = '';
+
+        for (let i = depth - pathToArray(path).length; i < depth; i++) {
+          routePathScope = routePathScope + pathToArray(globalPath)[i];
+        }
+
+        return path === routePathScope;
+      }
+    }
+  };
+
+  // Variable name conflict fix
+  let globalPath = path;
+
+  // Default options
+  let options = {
+    onClickReloadPrevent: true,
+  };
+
   // onClick reload prevent
   window.onclick = (e) => {
     if (options.onClickReloadPrevent) {
       let target = e.target.closest('a[href]');
       let isTargetInvalid =
-        target === null &&
-        target.nodeName !== 'A' &&
-        target.getAttribute('external') === '' &&
-        target.getAttribute('external') === 'true' &&
-        target.getAttribute('href').substring(0, 7) === 'http://' &&
-        target.getAttribute('href').substring(0, 8) === 'https://' &&
+        target === null ||
+        target.nodeName !== 'A' ||
+        target.getAttribute('external') === '' ||
+        target.getAttribute('external') === 'true' ||
+        target.getAttribute('href').substring(0, 7) === 'http://' ||
+        target.getAttribute('href').substring(0, 8) === 'https://' ||
         target.getAttribute('href').substring(0, 2) === '//';
 
       if (isTargetInvalid) return;
-      router.push(target.getAttribute('href'));
+      router.push(target?.getAttribute('href'));
       e.preventDefault();
     }
   };
@@ -97,9 +103,6 @@
   path.subscribe(() => {});
   query.subscribe(() => {});
   hash.subscribe(() => {});
-
-  // Variable name conflict fix
-  let globalPath = path;
 </script>
 
 <script>
