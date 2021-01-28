@@ -1,5 +1,5 @@
 import { pathToArray } from './pathToArray';
 
-export const getRouteDepth = (fallback, path, contextRoute) => {
-  return (!fallback ? pathToArray(path).length : 0) + (contextRoute?.depth ?? 0);
+export const getRouteDepth = (fallback, path, contextRouteDepth) => {
+  return (!fallback ? pathToArray(path).length : 0) + (contextRouteDepth ?? 0);
 };

@@ -1,6 +1,10 @@
 <script context="module">
-  import { path, query, hash } from './stores';
-  import { options, router } from './router';
+  import { onDestroy, getContext, setContext } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { path, query, hash } from '../lib/stores';
+  import { options, router } from '../lib/router';
+  import { getRouteDepth } from '../lib/getRouteDepth';
+  import { isRouteActive } from '../lib/isRouteActive';
 
   // Variable name conflict fix
   let globalPath = path;
@@ -31,11 +35,6 @@
 </script>
 
 <script>
-  import { onDestroy, getContext, setContext } from 'svelte';
-  import { writable } from 'svelte/store';
-  import { getRouteDepth } from './lib/getRouteDepth';
-  import { isRouteActive } from './lib/isRouteActive';
-
   const route = writable({});
   const contextRoute = getContext('contextRoute');
   const routeIndex = $contextRoute?.childRoutes?.length;
@@ -57,20 +56,18 @@
       throw new Error(`<Route path="${path}"> can't be outside root <Route>`);
   }
 
-  $: depth = getRouteDepth(fallback, path, $contextRoute);
-
+  // Internal state
+  $: depth = getRouteDepth(fallback, path, $contextRoute?.depth);
   $: isActive = isRouteActive($globalPath, $contextRoute, fallback, path, depth);
 
+  // External state
   // Context for child routes
   $: $route = { fallback, path, depth, isActive, childRoutes };
-
   route.updateChildRoute = (index, route) => (childRoutes[index] = route);
-
   setContext('contextRoute', route);
 
-  // Children state update
+  // Route state update for context route
   $: contextRoute?.updateChildRoute(routeIndex, $route);
-
   onDestroy(() => contextRoute?.updateChildRoute(routeIndex, null));
 </script>
 

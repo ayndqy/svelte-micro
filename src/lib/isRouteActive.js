@@ -1,18 +1,22 @@
 import { pathToArray } from './pathToArray';
 
 export const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
-  if (fallback) {
+  let contextChildrenRoutes = contextRoute?.childRoutes
+
+  const isFallbackActive = () => {
     let hasContextActiveRoutes = false;
 
-    for (let i = 0; i < contextRoute.childRoutes.length; i++) {
+    for (let i = 0; i < contextChildrenRoutes?.length; i++) {
       hasContextActiveRoutes =
-        !contextRoute.childRoutes[i]?.fallback && contextRoute.childRoutes[i]?.isActive;
+        !contextChildrenRoutes[i]?.fallback && contextChildrenRoutes[i]?.isActive;
 
       if (hasContextActiveRoutes) break;
     }
 
     return pathToArray(globalPath).length > depth && !hasContextActiveRoutes;
-  } else {
+  }
+
+  const isPathActive = () => {
     if (path === '/') {
       return !contextRoute || pathToArray(globalPath).length === depth;
     } else {
@@ -25,4 +29,6 @@ export const isRouteActive = (globalPath, contextRoute, fallback, path, depth) =
       return path === routePathScope;
     }
   }
+
+  return fallback ? isFallbackActive() : isPathActive();
 };
