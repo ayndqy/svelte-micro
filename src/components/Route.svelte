@@ -3,8 +3,6 @@
   import { writable } from 'svelte/store';
   import { path, query, hash } from '../lib/stores';
   import { options, router } from '../lib/router';
-  import { getRouteDepth } from '../lib/getRouteDepth';
-  import { isRouteActive } from '../lib/isRouteActive';
 
   // Variable name conflict fix
   let globalPath = path;
@@ -35,6 +33,9 @@
 </script>
 
 <script>
+  import { getRouteDepth } from '../lib/getRouteDepth';
+  import { isRouteActive } from '../lib/isRouteActive';
+
   const route = writable({});
   const contextRoute = getContext('contextRoute');
   const routeIndex = $contextRoute?.childRoutes?.length;

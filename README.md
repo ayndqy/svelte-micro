@@ -1,6 +1,6 @@
 # Svelte Micro
 
-Light one-component router for Svelte.
+Light & reactive one-component router for Svelte
 
 
 
@@ -89,7 +89,7 @@ This code shows the capabilities of `svelte-micro`.
 
 ```svelte
 <script>
-import { Route } from 'svelte-micro'
+  import { Route } from 'svelte-micro';
 </script>
 
 <!-- Default props value -->
@@ -99,7 +99,7 @@ import { Route } from 'svelte-micro'
 />
 ```
 
-All props are reactive.
+All `<Route />` props are reactive.
 
 
 
@@ -107,7 +107,7 @@ All props are reactive.
 
 ```svelte
 <script>
-  import { path, query, hash } from 'svelte-micro'
+  import { path, query, hash } from 'svelte-micro';
 </script>
 
 Current path is {$path}
@@ -126,7 +126,7 @@ Current hash is {$hash}
 ## Methods
 
 ```javascript
-import { router } from 'svelte-micro'
+import { router } from 'svelte-micro';
 ```
 
 - **`router.push(href = '/')`**\
@@ -143,12 +143,12 @@ import { router } from 'svelte-micro'
 ## Options
 
 ```javascript
-import { router } from 'svelte-micro'
+import { router } from 'svelte-micro';
 
 // Default values
 router.setOptions({
   onClickReloadPrevent: true
-})
+});
 ```
 
 
@@ -159,7 +159,7 @@ router.setOptions({
 ### Scroll behavior control
 
 ```javascript
-import { path } from 'svelte-micro'
+import { path } from 'svelte-micro';
 
 // Disable browser scroll behavior control
 if ('scrollRestoration' in history) {
@@ -167,7 +167,84 @@ if ('scrollRestoration' in history) {
 }
 
 // On path change reset scroll position
-path.subscribe(() => window.scrollTo(0, 0))
+path.subscribe(() => window.scrollTo(0, 0));
 ```
 
 By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own.
+
+
+### Guarded route
+
+```svelte
+<script>
+  import { Route } from 'svelte-micro';
+
+  let isUserAuthenticated = true;
+</script>
+
+<Route>
+  {#if isUserAuthenticated}
+
+    <Route path="/profile">
+      <h1>Welcome!</h1>
+      <button on:click={() => (isUserAuthenticated = false)}>Log out</button>
+    </Route>
+
+  {:else}
+  
+    <Route path="/profile">
+      <h1>You are not authenticated :\</h1>
+      <button on:click={() => (isUserAuthenticated = true)}>Log in</button>
+    </Route>
+
+  {/if}
+</Route>
+```
+
+
+### Active link
+
+```svelte
+<script>
+  import { path } from 'svelte-micro';
+
+  let href = '/home';
+</script>
+
+<a href class:active={href === $path}>Home</a>
+
+<style>
+  a.active {
+    color: red;
+  }
+</style>
+```
+
+
+### Transitions
+
+```svelte
+<script>
+  import { Route } from 'svelte-micro';
+  import { fade } from 'svelte/transition';
+</script>
+
+<Route>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+  </nav>
+
+  <Route path="/">
+    <div transition:fade>
+      <h1>Home page</h1>
+    </div>
+  </Route>
+
+  <Route path="/about">
+    <div transition:fade>
+      <h1>About page</h1>
+    </div>
+  </Route>
+</Route>
+```
