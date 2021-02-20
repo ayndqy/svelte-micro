@@ -1,6 +1,4 @@
 <script context="module">
-  import { onDestroy, getContext, setContext } from 'svelte';
-  import { writable } from 'svelte/store';
   import { path, query, hash } from '../lib/stores';
   import { options, router } from '../lib/router';
 
@@ -33,6 +31,8 @@
 </script>
 
 <script>
+  import { onDestroy, getContext, setContext } from 'svelte';
+  import { writable } from 'svelte/store';
   import { getRouteDepth } from '../lib/getRouteDepth';
   import { isRouteActive } from '../lib/isRouteActive';
 
@@ -50,7 +50,7 @@
   // Errors
   $: {
     if (path && path.substring(0, 1) !== '/')
-      throw new Error(`'${path}' is invalid path. Path must starts from '/'`);
+      throw new Error(`'${path}' is invalid path. Route path must start from '/'`);
     if (fallback && !contextRoute)
       throw new Error(`<Route fallback> can't be outside root <Route>`);
     if (path !== '/' && !contextRoute)
@@ -60,10 +60,9 @@
   // Internal state
   $: depth = getRouteDepth(fallback, path, $contextRoute?.depth);
   $: isActive = isRouteActive($globalPath, $contextRoute, fallback, path, depth);
+  $: $route = { fallback, path, depth, isActive, childRoutes };
 
   // External state
-  // Context for child routes
-  $: $route = { fallback, path, depth, isActive, childRoutes };
   route.updateChildRoute = (index, route) => (childRoutes[index] = route);
   setContext('contextRoute', route);
 
