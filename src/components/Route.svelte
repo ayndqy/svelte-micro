@@ -1,14 +1,7 @@
+<svelte:options immutable={false} />
+
 <script context="module">
-  import { path, query, hash } from '../lib/stores';
   import { options, router } from '../lib/router';
-
-  // Variable name conflict fix
-  let globalPath = path;
-
-  // Initial subscription
-  path.subscribe(() => {});
-  query.subscribe(() => {});
-  hash.subscribe(() => {});
 
   // onClick reload prevent
   window.onclick = (e) => {
@@ -31,46 +24,52 @@
 </script>
 
 <script>
-  import { onDestroy, getContext, setContext } from 'svelte';
+  import { onDestroy, getContext, setContext, hasContext } from 'svelte';
   import { writable } from 'svelte/store';
+  import { path as globalPath } from '../lib/stores';
   import { getRouteDepth } from '../lib/getRouteDepth';
-  import { isRouteActive } from '../lib/isRouteActive';
-
-  const route = writable({});
-  const contextRoute = getContext('contextRoute');
-  const routeIndex = $contextRoute?.childRoutes?.length;
+  import { isFallbackActive, isPathActive } from '../lib/isRouteActive';
 
   export let fallback = false;
   export let path = '/';
 
-  let depth = 0;
-  let isActive = false;
-  let childRoutes = [];
+  const root = !hasContext('contextDepth') && !hasContext('contextChildRoutes');
+  const depth = writable(0);
+  const childRoutes = writable([]);
+  const contextDepth = getContext('contextDepth');
+  const contextChildRoutes = getContext('contextChildRoutes');
+  const contextChildRoutesIndex = $contextChildRoutes?.length;
 
   // Errors
   $: {
-    if (path && path.substring(0, 1) !== '/')
+    if (path.substring(0, 1) !== '/')
       throw new Error(`'${path}' is invalid path. Route path must start from '/'`);
-    if (fallback && !contextRoute)
-      throw new Error(`<Route fallback> can't be outside root <Route>`);
-    if (path !== '/' && !contextRoute)
+    if (root && fallback) throw new Error(`<Route fallback> can't be outside root <Route>`);
+    if (root && path !== '/')
       throw new Error(`<Route path="${path}"> can't be outside root <Route>`);
   }
 
-  // Internal state
-  $: depth = getRouteDepth(fallback, path, $contextRoute?.depth);
-  $: isActive = isRouteActive($globalPath, $contextRoute, fallback, path, depth);
-  $: $route = { fallback, path, depth, isActive, childRoutes };
+  // Route depth update
+  $: $depth = getRouteDepth(fallback, path, $contextDepth);
 
-  // External state
-  route.updateChildRoute = (index, route) => (childRoutes[index] = route);
-  setContext('contextRoute', route);
+  // Route data
+  $: route = {
+    root: root,
+    fallback: fallback,
+    path: path,
+    depth: $depth,
+    childRoutes: $childRoutes,
+  };
 
-  // Route state update for context route
-  $: contextRoute?.updateChildRoute(routeIndex, $route);
-  onDestroy(() => contextRoute?.updateChildRoute(routeIndex, null));
+  // Context childRoutes update
+  $: !route.root && ($contextChildRoutes[contextChildRoutesIndex] = route);
+  onDestroy(() => !route.root && ($contextChildRoutes[contextChildRoutesIndex] = null));
+
+  // Context for child routes
+  setContext('contextChildRoutes', childRoutes);
+  setContext('contextDepth', depth);
 </script>
 
-{#if isActive}
+{#if fallback ? isFallbackActive($globalPath, route, $contextChildRoutes) : isPathActive($globalPath, route)}
   <slot />
 {/if}

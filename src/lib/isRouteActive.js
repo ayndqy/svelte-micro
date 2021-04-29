@@ -1,34 +1,30 @@
 import { pathToArray } from './pathToArray';
 
-export const isRouteActive = (globalPath, contextRoute, fallback, path, depth) => {
-  let contextChildrenRoutes = contextRoute?.childRoutes
+export const isFallbackActive = (globalPath, route, contextChildRoutes) => {
+  let hasContextActiveRoutes = false;
 
-  const isFallbackActive = () => {
-    let hasContextActiveRoutes = false;
+  for (let i = 0; i < contextChildRoutes?.length; i++) {
+    hasContextActiveRoutes =
+      contextChildRoutes[i] &&
+      !contextChildRoutes[i]?.fallback &&
+      isPathActive(globalPath, contextChildRoutes[i]);
 
-    for (let i = 0; i < contextChildrenRoutes?.length; i++) {
-      hasContextActiveRoutes =
-        !contextChildrenRoutes[i]?.fallback && contextChildrenRoutes[i]?.isActive;
-
-      if (hasContextActiveRoutes) break;
-    }
-
-    return pathToArray(globalPath).length > depth && !hasContextActiveRoutes;
+    if (hasContextActiveRoutes) break;
   }
 
-  const isPathActive = () => {
-    if (path === '/') {
-      return !contextRoute || pathToArray(globalPath).length === depth;
-    } else {
-      let routePathScope = '';
+  return pathToArray(globalPath).length >= route.depth && !hasContextActiveRoutes;
+}
 
-      for (let i = depth - pathToArray(path).length; i < depth; i++) {
-        routePathScope = routePathScope + pathToArray(globalPath)[i];
-      }
+export const isPathActive = (globalPath, route) => {
+  if (route.path === '/') {
+    return route.root || pathToArray(globalPath).length === route.depth;
+  } else {
+    let routePathScope = '';
 
-      return path === routePathScope;
+    for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
+      routePathScope = routePathScope + pathToArray(globalPath)[i];
     }
-  }
 
-  return fallback ? isFallbackActive() : isPathActive();
-};
+    return route.path === routePathScope;
+  }
+}

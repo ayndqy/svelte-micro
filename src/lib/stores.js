@@ -9,3 +9,8 @@ export const query = readable(location.search, (set) =>
 export const hash = readable(location.hash, (set) =>
   window.addEventListener('popstate', () => set(location.hash))
 );
+
+// Initial subscription
+path.subscribe(() => { });
+query.subscribe(() => { });
+hash.subscribe(() => { });
