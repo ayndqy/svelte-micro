@@ -211,7 +211,7 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
   let href = '/home';
 </script>
 
-<a href class:active={href === $path}>Home</a>
+<a {href} class:active={href === $path}>Home</a>
 
 <style>
   a.active {
