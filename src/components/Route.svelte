@@ -27,7 +27,8 @@
   import { onDestroy, getContext, setContext, hasContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { path as globalPath } from '../lib/stores';
-  import { isFallbackActive, isPathActive, getRouteDepth } from '../lib/router';
+  import { getRouteDepth } from '../lib/getRouteDepth';
+  import { isFallbackActive, isPathActive } from '../lib/isRouteActive';
 
   export let fallback = false;
   export let path = '/';
@@ -35,18 +36,16 @@
   const root = !hasContext('contextDepth') && !hasContext('contextChildRoutes');
   const depth = writable(0);
   const childRoutes = writable([]);
-
   const contextDepth = getContext('contextDepth');
   const contextChildRoutes = getContext('contextChildRoutes');
-  const contextRouteIndex = $contextChildRoutes?.length;
+  const contextChildRoutesIndex = $contextChildRoutes?.length;
 
   // Errors
   $: {
     if (path.substring(0, 1) !== '/')
       throw new Error(`'${path}' is invalid path. Route path must start from '/'`);
-    if (route.root && fallback)
-      throw new Error(`<Route fallback> can't be outside root <Route>`);
-    if (route.root && path !== '/')
+    if (root && fallback) throw new Error(`<Route fallback> can't be outside root <Route>`);
+    if (root && path !== '/')
       throw new Error(`<Route path="${path}"> can't be outside root <Route>`);
   }
 
@@ -63,8 +62,8 @@
   };
 
   // Context childRoutes update
-  $: !route.root && ($contextChildRoutes[contextRouteIndex] = route);
-  onDestroy(() => !route.root && ($contextChildRoutes[contextRouteIndex] = null));
+  $: !route.root && ($contextChildRoutes[contextChildRoutesIndex] = route);
+  onDestroy(() => !route.root && ($contextChildRoutes[contextChildRoutesIndex] = null));
 
   // Context for child routes
   setContext('contextChildRoutes', childRoutes);
