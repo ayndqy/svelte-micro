@@ -81,7 +81,7 @@ $ npm i -D svelte-micro
 </Route>
 ```
 
-This code shows the capabilities of `svelte-micro`.
+This code shows the capabilities of `svelte-micro`
 
 
 
@@ -99,7 +99,7 @@ This code shows the capabilities of `svelte-micro`.
 />
 ```
 
-All `<Route />` props are reactive.
+All `<Route />` props are reactive
 
 
 
@@ -133,10 +133,10 @@ import { router } from 'svelte-micro';
   Push new url to history
 
 - **`router.replace(href = '/')`**\
-  Replace url in history
+  Replace current url in history
 
 - **`router.setOptions(changedOptions = {})`**\
-  Set [options](#options) for router.
+  Set [options](#options) for router
 
 
 
@@ -170,7 +170,7 @@ if ('scrollRestoration' in history) {
 path.subscribe(() => window.scrollTo(0, 0));
 ```
 
-By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own.
+By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own
 
 
 ### Guarded route
