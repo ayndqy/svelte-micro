@@ -1,3 +1,5 @@
+import { path, query, hash } from './stores';
+
 // Default options
 export let options = {
   onClickReloadPrevent: true,
@@ -36,21 +38,6 @@ export const getRouteDepth = (fallback, path, contextRouteDepth) => {
   return (!fallback ? pathToArray(path).length : 1) + (contextRouteDepth ?? 0);
 };
 
-// Is path active function
-export const isPathActive = (globalPath, route) => {
-  if (route.path === '/') {
-    return route.root || pathToArray(globalPath).length === route.depth;
-  } else {
-    let routePathScope = '';
-
-    for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
-      routePathScope = routePathScope + pathToArray(globalPath)[i];
-    }
-
-    return route.path === routePathScope;
-  }
-}
-
 // Is fallback active function
 export const isFallbackActive = (globalPath, route, contextChildRoutes) => {
   let hasContextActiveRoutes = false;
@@ -66,3 +53,43 @@ export const isFallbackActive = (globalPath, route, contextChildRoutes) => {
 
   return pathToArray(globalPath).length >= route.depth && !hasContextActiveRoutes;
 }
+
+// Is path active function
+export const isPathActive = (globalPath, route) => {
+  if (route.path === '/') {
+    return route.root || pathToArray(globalPath).length === route.depth;
+  } else {
+    let routePathScope = '';
+
+    for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
+      routePathScope = routePathScope + pathToArray(globalPath)[i];
+    }
+
+    return route.path === routePathScope;
+  }
+}
+
+// Reload prevent function
+export const linkReloadPrevent = (e) => {
+  let target = e.target.closest('a[href]');
+  let isTargetInvalid =
+    target === null ||
+    target.nodeName !== 'A' ||
+    target.getAttribute('external') === '' ||
+    target.getAttribute('external') === 'true' ||
+    target.getAttribute('href').substring(0, 7) === 'http://' ||
+    target.getAttribute('href').substring(0, 8) === 'https://' ||
+    target.getAttribute('href').substring(0, 2) === '//';
+
+  if (isTargetInvalid) return;
+  router.push(target?.getAttribute('href'));
+  e.preventDefault();
+}
+
+// onClick reload prevent
+window.onclick = (e) => (options.onClickReloadPrevent ? linkReloadPrevent(e) : true);
+
+// Initial subscription
+path.subscribe(() => { });
+query.subscribe(() => { });
+hash.subscribe(() => { });
