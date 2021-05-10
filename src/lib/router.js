@@ -38,35 +38,40 @@ export const getRouteDepth = (fallback, path, contextRouteDepth) => {
   return (!fallback ? pathToArray(path).length : 1) + (contextRouteDepth ?? 0);
 };
 
-// Is fallback active function
-export const isFallbackActive = (globalPath, route, contextChildRoutes) => {
-  let hasContextActiveRoutes = false;
+// Is route active function
+export const isRouteActive = (globalPath, route, contextChildRoutes) => {
+  // Is fallback active function
+  const isFallbackActive = (globalPath, route, contextChildRoutes) => {
+    let hasContextActiveRoutes = false;
 
-  for (let i = 0; i < contextChildRoutes?.length; i++) {
-    hasContextActiveRoutes =
-      contextChildRoutes[i] &&
-      !contextChildRoutes[i]?.fallback &&
-      isPathActive(globalPath, contextChildRoutes[i]);
+    for (let i = 0; i < contextChildRoutes?.length; i++) {
+      hasContextActiveRoutes =
+        contextChildRoutes[i] &&
+        !contextChildRoutes[i]?.fallback &&
+        isPathActive(globalPath, contextChildRoutes[i]);
 
-    if (hasContextActiveRoutes) break;
-  }
-
-  return pathToArray(globalPath).length >= route.depth && !hasContextActiveRoutes;
-}
-
-// Is path active function
-export const isPathActive = (globalPath, route) => {
-  if (route.path === '/') {
-    return route.root || pathToArray(globalPath).length === route.depth;
-  } else {
-    let routePathScope = '';
-
-    for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
-      routePathScope = routePathScope + pathToArray(globalPath)[i];
+      if (hasContextActiveRoutes) break;
     }
 
-    return route.path === routePathScope;
+    return pathToArray(globalPath).length >= route.depth && !hasContextActiveRoutes;
   }
+
+  // Is path active function
+  const isPathActive = (globalPath, route) => {
+    if (route.path === '/') {
+      return route.root || pathToArray(globalPath).length === route.depth;
+    } else {
+      let routePathScope = '';
+
+      for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
+        routePathScope = routePathScope + pathToArray(globalPath)[i];
+      }
+
+      return route.path === routePathScope;
+    }
+  }
+
+  return route.fallback ? isFallbackActive(globalPath, route, contextChildRoutes) : isPathActive(globalPath, route);
 }
 
 // Reload prevent function

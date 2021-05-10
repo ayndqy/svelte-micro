@@ -4,7 +4,7 @@
   import { onDestroy, getContext, setContext, hasContext } from 'svelte';
   import { writable } from 'svelte/store';
   import { path as globalPath } from '../lib/stores';
-  import { isFallbackActive, isPathActive, getRouteDepth } from '../lib/router';
+  import { getRouteDepth, isRouteActive } from '../lib/router';
 
   export let fallback = false;
   export let path = '/';
@@ -45,6 +45,7 @@
   setContext('contextChildRoutes', childRoutes);
 </script>
 
-{#if fallback ? isFallbackActive($globalPath, $route, $contextChildRoutes) : isPathActive($globalPath, $route)}
+<!-- Route content -->
+{#if isRouteActive($globalPath, $route, $contextChildRoutes)}
   <slot />
 {/if}
