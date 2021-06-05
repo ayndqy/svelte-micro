@@ -1,3 +1,4 @@
+import { get } from 'svelte/store';
 import { path, query, hash } from './stores';
 
 // Default options
@@ -87,7 +88,13 @@ export const linkReloadPrevent = (e) => {
     target.getAttribute('href').substring(0, 2) === '//';
 
   if (isTargetInvalid) return;
-  router.push(target?.getAttribute('href'));
+
+  if (target?.getAttribute('href') === get(path)) {
+    router.replace(target?.getAttribute('href'));
+  } else {
+    router.push(target?.getAttribute('href'));
+  }
+
   e.preventDefault();
 }
 
