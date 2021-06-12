@@ -81,11 +81,13 @@ export const linkReloadPrevent = (e) => {
   let isTargetInvalid =
     target === null ||
     target.nodeName !== 'A' ||
-    target.getAttribute('external') === '' ||
-    target.getAttribute('external') === 'true' ||
+    target.getAttribute('external-href') === '' ||
+    target.getAttribute('external-href') === 'true' ||
     target.getAttribute('href').substring(0, 7) === 'http://' ||
     target.getAttribute('href').substring(0, 8) === 'https://' ||
-    target.getAttribute('href').substring(0, 2) === '//';
+    target.getAttribute('href').substring(0, 2) === '//' ||
+    target.getAttribute('href').substring(0, 7) === 'mailto:' ||
+    target.getAttribute('href').substring(0, 4) === 'tel:';
 
   if (isTargetInvalid) return;
 

@@ -37,6 +37,8 @@ $ npm i -D svelte-micro
     <a href="/">Home</a>
     <a href="/portfolio">Portfolio</a>
     <a href="/about-us/story">Our story</a>
+    <!-- External link -->
+    <a href="https://github.com/ayndqy/svelte-micro" external-href>Github</a>
   </nav>
 
   <!-- Will be shown only when the page path is equal to the '/' -->
