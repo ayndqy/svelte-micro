@@ -8,6 +8,7 @@ Light & reactive one-component router for Svelte
 
 - [Installation](#installation)
 - [Example](#example)
+- [Links](#links)
 - [Component](#component)
 - [Stores](#stores)
 - [Methods](#methods)
@@ -84,6 +85,21 @@ $ npm i -D svelte-micro
 ```
 
 This code shows the capabilities of `svelte-micro`
+
+
+
+## Links
+
+```svelte
+<a 
+  href="/" 
+  external-href={false} 
+/>
+```
+
+All links that begin with `'https://'`, `'http://'`, `'//'`, `mailto:`, `tel:` will be ignored by svelte-micro.
+
+If you want svelte-micro to ignore all links use [`onClickReloadPrevent`](#options) option.
 
 
 
