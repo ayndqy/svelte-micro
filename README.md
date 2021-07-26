@@ -2,8 +2,6 @@
 
 Light & reactive one-component router for Svelte
 
-
-
 ## Table of content
 
 - [Installation](#installation)
@@ -15,15 +13,11 @@ Light & reactive one-component router for Svelte
 - [Options](#options)
 - [Tips](#tips)
 
-
-
 ## Installation
 
 ```
 $ npm i -D svelte-micro
 ```
-
-
 
 ## Example
 
@@ -86,22 +80,18 @@ $ npm i -D svelte-micro
 
 This code shows the capabilities of `svelte-micro`
 
-
-
 ## Links
 
 ```svelte
-<a 
-  href="/" 
-  external-href={false} 
+<a
+  href="/"
+  external-href={false}
 />
 ```
 
 All links that begin with `'https://'`, `'http://'`, `'//'`, `mailto:`, `tel:` will be ignored by svelte-micro
 
 If you want svelte-micro to ignore all links use [`onClickReloadPrevent`](#options) option
-
-
 
 ## Component
 
@@ -119,8 +109,6 @@ If you want svelte-micro to ignore all links use [`onClickReloadPrevent`](#optio
 
 All `<Route />` props are reactive
 
-
-
 ## Stores
 
 ```svelte
@@ -133,13 +121,11 @@ Current query is {$query}
 Current hash is {$hash}
 ```
 
-- **`$path`** 
+- **`$path`**
 
 - **`$query`**
 
 - **`$hash`**
-
-
 
 ## Methods
 
@@ -156,8 +142,6 @@ import { router } from 'svelte-micro';
 - **`router.setOptions(changedOptions = {})`**\
   Set [options](#options) for router
 
-
-
 ## Options
 
 ```javascript
@@ -165,14 +149,11 @@ import { router } from 'svelte-micro';
 
 // Default values
 router.setOptions({
-  onClickReloadPrevent: true
+  onClickReloadPrevent: true,
 });
 ```
 
-
-
 ## Tips
-
 
 ### Scroll behavior control
 
@@ -190,6 +171,32 @@ path.subscribe(() => window.scrollTo(0, 0));
 
 By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own
 
+### Stores usage
+
+```svelte
+<script>
+  import { path, query, hash } from 'svelte-micro';
+
+  // For example current location equals to '/somepath?text=Hello#modal'
+  // $path = '/somepath'
+  // $query = '?text=Hello'
+  // $hash = '#modal'
+
+  // If you want to get an object with data from the query
+  $: queryData = Object.fromEntries(new URLSearchParams($query).entries())
+</script>
+
+<!-- Query usage example -->
+{queryData.text}
+<!-- Result: Hello -->
+
+<!-- Hash usage example -->
+{#if $hash === '#modal'}
+  <div class='modal'>
+    Hello from modal!
+  </div>
+{/if}
+```
 
 ### Guarded route
 
@@ -209,7 +216,7 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
     </Route>
 
   {:else}
-  
+
     <Route path="/profile">
       <h1>You are not authenticated :\</h1>
       <button on:click={() => (isUserAuthenticated = true)}>Log in</button>
@@ -218,7 +225,6 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
   {/if}
 </Route>
 ```
-
 
 ### Active link
 
@@ -237,7 +243,6 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
   }
 </style>
 ```
-
 
 ### Transitions
 
