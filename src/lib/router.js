@@ -1,11 +1,18 @@
-import { get } from 'svelte/store';
 import { path, query, hash } from './stores';
+
+// Initial subscription
+let pathValue, queryValue, hashValue;
+
+path.subscribe((value) => (pathValue = value));
+query.subscribe((value) => (queryValue = value));
+hash.subscribe((value) => (hashValue = value));
 
 // Default options
 export let options = {
   onClickReloadPrevent: true,
 };
 
+// Router methods
 export const router = {
   // Push state to history
   push: (href = '/') => {
@@ -55,7 +62,7 @@ export const isRouteActive = (globalPath, route, contextChildRoutes) => {
     }
 
     return pathToArray(globalPath).length >= route.depth && !hasContextActiveRoutes;
-  }
+  };
 
   // Is path active function
   const isPathActive = (globalPath, route) => {
@@ -70,14 +77,16 @@ export const isRouteActive = (globalPath, route, contextChildRoutes) => {
 
       return route.path === routePathScope;
     }
-  }
+  };
 
-  return route.fallback ? isFallbackActive(globalPath, route, contextChildRoutes) : isPathActive(globalPath, route);
-}
+  return route.fallback
+    ? isFallbackActive(globalPath, route, contextChildRoutes)
+    : isPathActive(globalPath, route);
+};
 
 // Reload prevent function
-export const linkReloadPrevent = (e) => {
-  let target = e.target.closest('a[href]');
+export const linkReloadPrevent = (event) => {
+  let target = event.target.closest('a[href]');
   let isTargetInvalid =
     target === null ||
     target.nodeName !== 'A' ||
@@ -91,19 +100,12 @@ export const linkReloadPrevent = (e) => {
 
   if (isTargetInvalid) return;
 
-  if (target?.getAttribute('href') === get(path)) {
-    router.replace(target?.getAttribute('href'));
-  } else {
-    router.push(target?.getAttribute('href'));
-  }
+  target?.getAttribute('href') === pathValue
+    ? router.replace(target?.getAttribute('href'))
+    : router.push(target?.getAttribute('href'));
 
-  e.preventDefault();
-}
+  event.preventDefault();
+};
 
 // onClick reload prevent
-window.onclick = (e) => (options.onClickReloadPrevent ? linkReloadPrevent(e) : true);
-
-// Initial subscription
-path.subscribe(() => { });
-query.subscribe(() => { });
-hash.subscribe(() => { });
+window.onclick = (event) => (options.onClickReloadPrevent ? linkReloadPrevent(event) : true);

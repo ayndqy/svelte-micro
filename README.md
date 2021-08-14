@@ -130,7 +130,7 @@ Current hash is {$hash}
 ## Methods
 
 ```javascript
-import { router } from 'svelte-micro';
+import { router, pathToArray } from 'svelte-micro';
 ```
 
 - **`router.push(href = '/')`**\
@@ -141,6 +141,9 @@ import { router } from 'svelte-micro';
 
 - **`router.setOptions(changedOptions = {})`**\
   Set [options](#options) for router
+
+- **`pathToArray(path)`**\
+  For example: `'/about-us/story'` will be `['/about-us', '/story']`
 
 ## Options
 
@@ -177,22 +180,22 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 <script>
   import { path, query, hash } from 'svelte-micro';
 
-  // For example current location equals to '/somepath?text=Hello#modal'
+  // For example: current location equals to '/somepath?text=Hello#modal'
   // $path = '/somepath'
   // $query = '?text=Hello'
   // $hash = '#modal'
 
   // If you want to get an object with data from the query
-  $: queryData = Object.fromEntries(new URLSearchParams($query).entries())
+  $: queryData = Object.fromEntries(new URLSearchParams($query).entries());
 </script>
 
 <!-- Query usage example -->
-{queryData.text}
+{queryData?.text}
 <!-- Result: Hello -->
 
 <!-- Hash usage example -->
 {#if $hash === '#modal'}
-  <div class='modal'>
+  <div class="modal">
     Hello from modal!
   </div>
 {/if}

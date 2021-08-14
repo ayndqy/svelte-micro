@@ -9,12 +9,12 @@
   export let fallback = false;
   export let path = '/';
 
-  const root = !hasContext('contextRoute');
+  const root = !hasContext('_parentalRoute');
   const route = writable({});
   const childRoutes = writable([]);
-  const contextRoute = getContext('contextRoute');
-  const contextChildRoutes = getContext('contextChildRoutes');
-  const contextRouteIndex = $contextChildRoutes?.length;
+  const parentalRoute = getContext('_parentalRoute');
+  const parentalChildRoutes = getContext('_parentalChildRoutes');
+  const routeIndex = $parentalChildRoutes?.length;
 
   // Errors
   $: {
@@ -24,7 +24,7 @@
       throw new Error(`<Route fallback> cannot be outside root <Route>`);
     if (root && path !== '/')
       throw new Error(`<Route path="${path}"> cannot be outside root <Route>`);
-    if (!root && $contextRoute.fallback)
+    if (!root && $parentalRoute.fallback)
       throw new Error(`Routes cannot be inside <Route fallback>`);
   }
 
@@ -33,19 +33,19 @@
     root,
     fallback,
     path,
-    depth: getRouteDepth(fallback, path, $contextRoute?.depth),
+    depth: getRouteDepth(fallback, path, $parentalRoute?.depth),
   };
 
   // Context childRoutes update
-  $: !root && ($contextChildRoutes[contextRouteIndex] = $route);
-  onDestroy(() => !root && ($contextChildRoutes[contextRouteIndex] = null));
+  $: !root && ($parentalChildRoutes[routeIndex] = $route);
+  onDestroy(() => !root && ($parentalChildRoutes[routeIndex] = null));
 
   // Context for child routes
-  setContext('contextRoute', route);
-  setContext('contextChildRoutes', childRoutes);
+  setContext('_parentalRoute', route);
+  setContext('_parentalChildRoutes', childRoutes);
 </script>
 
 <!-- Route content -->
-{#if isRouteActive($globalPath, $route, $contextChildRoutes)}
+{#if isRouteActive($globalPath, $route, $parentalChildRoutes)}
   <slot />
 {/if}
