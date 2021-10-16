@@ -2,14 +2,13 @@ import { path, query, hash } from './stores';
 
 // Initial subscription
 let pathValue, queryValue, hashValue;
-
 path.subscribe((value) => (pathValue = value));
 query.subscribe((value) => (queryValue = value));
 hash.subscribe((value) => (hashValue = value));
 
 // Default options
 export let options = {
-  onClickReloadPrevent: true,
+  reloadPrevent: true,
 };
 
 // Router methods
@@ -30,23 +29,15 @@ export const router = {
   setOptions: (changedOptions = {}) => Object.assign(options, changedOptions),
 };
 
-// Path to array function
-export const pathToArray = (path) => {
-  let pathArray = path.split('/').filter((path) => path !== '');
+export const pathToArray = (path) =>
+  path
+    .split('/')
+    .filter((path) => path !== '')
+    .map((path) => '/' + path);
 
-  for (let i = 0; i < pathArray.length; i++) {
-    pathArray[i] = '/' + pathArray[i];
-  }
+export const getRouteDepth = (fallback, path, contextDepth) =>
+  (!fallback ? pathToArray(path).length : 1) + (contextDepth ?? 0);
 
-  return pathArray;
-};
-
-// Get route depth function
-export const getRouteDepth = (fallback, path, contextRouteDepth) => {
-  return (!fallback ? pathToArray(path).length : 1) + (contextRouteDepth ?? 0);
-};
-
-// Is route active function
 export const isRouteActive = (globalPath, route, contextChildRoutes) => {
   // Is fallback active function
   const isFallbackActive = (globalPath, route, contextChildRoutes) => {
@@ -71,9 +62,8 @@ export const isRouteActive = (globalPath, route, contextChildRoutes) => {
     } else {
       let routePathScope = '';
 
-      for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++) {
+      for (let i = route.depth - pathToArray(route.path).length; i < route.depth; i++)
         routePathScope = routePathScope + pathToArray(globalPath)[i];
-      }
 
       return route.path === routePathScope;
     }
@@ -84,9 +74,8 @@ export const isRouteActive = (globalPath, route, contextChildRoutes) => {
     : isPathActive(globalPath, route);
 };
 
-// Reload prevent function
-export const linkReloadPrevent = (event) => {
-  let target = event.target.closest('a[href]');
+export const linkReloadPrevent = (e) => {
+  let target = e.target.closest('a[href]');
   let isTargetInvalid =
     target === null ||
     target.nodeName !== 'A' ||
@@ -104,8 +93,8 @@ export const linkReloadPrevent = (event) => {
     ? router.replace(target?.getAttribute('href'))
     : router.push(target?.getAttribute('href'));
 
-  event.preventDefault();
+  e.preventDefault();
 };
 
 // onClick reload prevent
-window.onclick = (event) => (options.onClickReloadPrevent ? linkReloadPrevent(event) : true);
+window.onclick = (e) => (options.reloadPrevent ? linkReloadPrevent(e) : true);

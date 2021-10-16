@@ -1,5 +1,5 @@
 <script>
-  import { Route, router, path, query, hash } from 'svelte-micro';
+  import { Route, router, path, query, hash } from '../../src/index';
 
   // For custom URL field
   let customURL = '';
@@ -9,7 +9,7 @@
   let story = '/about-us/story';
 
   // setOptions reactivity test
-  $: router.setOptions({ onClickReloadPrevent: bool });
+  $: router.setOptions({ reloadPrevent: bool });
 </script>
 
 <Route>

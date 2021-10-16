@@ -8,7 +8,6 @@
 
   export let fallback = false;
   export let path = '/';
-
   const root = !hasContext('_parentalRoute');
   const route = writable({});
   const childRoutes = writable([]);
@@ -16,7 +15,7 @@
   const parentalChildRoutes = getContext('_parentalChildRoutes');
   const routeIndex = $parentalChildRoutes?.length;
 
-  // Errors
+  // Error prevention
   $: {
     if (path.substring(0, 1) !== '/')
       throw new Error(`'${path}' is invalid path. Route path must start from '/'`);

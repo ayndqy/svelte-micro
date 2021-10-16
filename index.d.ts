@@ -15,7 +15,7 @@ export declare const router: {
 
   replace(href: string): void;
 
-  setOptions(changedOptions: { onClickReloadPrevent: boolean }): void;
+  setOptions(changedOptions: { reloadPrevent: boolean }): void;
 };
 
 export declare function pathToArray(path: string): string[];

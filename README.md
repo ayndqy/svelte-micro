@@ -91,7 +91,7 @@ This code shows the capabilities of `svelte-micro`
 
 All links that begin with `'https://'`, `'http://'`, `'//'`, `mailto:`, `tel:` will be ignored by svelte-micro
 
-If you want svelte-micro to ignore all links use [`onClickReloadPrevent`](#options) option
+If you want svelte-micro to ignore all links use [`reloadPrevent`](#options) option
 
 ## Component
 
@@ -152,7 +152,7 @@ import { router } from 'svelte-micro';
 
 // Default values
 router.setOptions({
-  onClickReloadPrevent: true,
+  reloadPrevent: true,
 });
 ```
 

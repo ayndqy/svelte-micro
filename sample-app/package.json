@@ -14,10 +14,10 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.38.2",
+    "svelte": "^3.40.0",
     "svelte-micro": "^1.2.1"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.11"
+    "sirv-cli": "^1.0.0"
   }
 }
