@@ -1,11 +1,19 @@
-import { readable } from 'svelte/store';
+import { readable } from 'svelte/store'
 
-export const path = readable(location.pathname, (set) =>
-  window.addEventListener('popstate', () => set(location.pathname))
-);
-export const query = readable(location.search, (set) =>
-  window.addEventListener('popstate', () => set(location.search))
-);
-export const hash = readable(location.hash, (set) =>
-  window.addEventListener('popstate', () => set(location.hash))
-);
+export const path = readable(location.pathname, (set) => {
+  let eventHandler = () => set(location.pathname)
+  window.addEventListener('popstate', eventHandler)
+  return () => window.removeEventListener('popstate', eventHandler)
+})
+
+export const query = readable(location.search, (set) => {
+  let eventHandler = () => set(location.search)
+  window.addEventListener('popstate', eventHandler)
+  return () => window.removeEventListener('popstate', eventHandler)
+})
+
+export const hash = readable(location.hash, (set) => {
+  let eventHandler = () => set(location.hash)
+  window.addEventListener('popstate', eventHandler)
+  return () => window.removeEventListener('popstate', eventHandler)
+})

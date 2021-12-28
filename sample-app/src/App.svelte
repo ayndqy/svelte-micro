@@ -1,15 +1,15 @@
 <script>
-  import { Route, router, path, query, hash } from '../../src/index';
+  import { Route, router, path, query, hash } from '../../dist/index'
 
-  // For custom URL field
-  let customURL = '';
+  // For ../../../src/indexd
+  let customURL = ''
   // For roure destroy reactivity test
-  let bool = true;
+  let bool = true
   // For roure path reactivity test
-  let story = '/about-us/story';
+  let story = '/about-us/story'
 
   // setOptions reactivity test
-  $: router.setOptions({ reloadPrevent: bool });
+  $: router.setOptions({ reloadPrevent: bool })
 </script>
 
 <Route>

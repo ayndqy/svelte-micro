@@ -13,7 +13,7 @@ const pkg = require('./package.json');
       'svelte',
       'svelte/*'
     ],
-    plugins: [sveltePlugin()]
+    plugins: [sveltePlugin({ immutable: false })]
   });
 
   await esbuild.build({
@@ -26,6 +26,6 @@ const pkg = require('./package.json');
       'svelte',
       'svelte/*'
     ],
-    plugins: [sveltePlugin()]
+    plugins: [sveltePlugin({ immutable: false })]
   });
 })()
