@@ -130,7 +130,7 @@ Current hash is {$hash}
 ## Methods
 
 ```javascript
-import { router, pathToArray } from 'svelte-micro';
+import { router, pathToArray } from 'svelte-micro'
 ```
 
 - **`router.push(href = '/')`**\
@@ -142,18 +142,15 @@ import { router, pathToArray } from 'svelte-micro';
 - **`router.setOptions(changedOptions = {})`**\
   Set [options](#options) for router
 
-- **`pathToArray(path)`**\
-  For example: `'/about-us/story'` will be `['/about-us', '/story']`
-
 ## Options
 
 ```javascript
-import { router } from 'svelte-micro';
+import { router } from 'svelte-micro'
 
 // Default values
 router.setOptions({
   reloadPrevent: true,
-});
+})
 ```
 
 ## Tips
@@ -161,15 +158,15 @@ router.setOptions({
 ### Scroll behavior control
 
 ```javascript
-import { path } from 'svelte-micro';
+import { path } from 'svelte-micro'
 
 // Disable browser scroll behavior control
 if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
+  history.scrollRestoration = 'manual'
 }
 
 // On path change reset scroll position
-path.subscribe(() => window.scrollTo(0, 0));
+path.subscribe(() => window.scrollTo(0, 0))
 ```
 
 By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own

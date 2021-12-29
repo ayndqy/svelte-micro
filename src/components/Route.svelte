@@ -1,7 +1,7 @@
 <svelte:options immutable={false} />
 
 <script>
-  import { onDestroy, getContext, setContext } from 'svelte'
+  import { onDestroy, getContext, setContext, hasContext } from 'svelte'
   import { writable } from 'svelte/store'
   import { path as globalPath } from '../lib/stores'
   import getRouteDepth from '../lib/getRouteDepth'
@@ -10,6 +10,7 @@
   export let fallback = false
   export let path = '/'
 
+  const root = !hasContext('_route')
   const route = writable({})
   const children = writable([])
 
@@ -18,9 +19,9 @@
   const contextIndex = $contextChildren?.length
 
   $: $route = {
-    root: contextRoute === undefined,
-    fallback: fallback,
-    path: path,
+    root,
+    fallback,
+    path,
     depth: getRouteDepth(fallback, path, $contextRoute?.depth),
   }
 

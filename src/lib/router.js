@@ -46,3 +46,5 @@ export let options = {
       : window.removeEventListener('click', linkClickHandler)
   },
 }
+
+options.reloadPrevent = true
