@@ -1,5 +1,5 @@
 <script>
-  import { Route, router, path, query, hash } from '../../dist/index'
+  import { Route, router, path, query, hash } from '../../src/index'
 
   // For ../../../src/indexd
   let customURL = ''
