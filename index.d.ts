@@ -18,6 +18,8 @@ export declare const router: {
   setOptions(changedOptions: { reloadPrevent: boolean }): void
 }
 
+export declare function pathToArray(path: string): string[]
+
 export declare const path: Readable<string>
 
 export declare const query: Readable<string>

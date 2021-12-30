@@ -142,6 +142,9 @@ import { router, pathToArray } from 'svelte-micro'
 - **`router.setOptions(changedOptions = {})`**\
   Set [options](#options) for router
 
+- **`pathToArray(path)`**\
+  For example: `'/about-us/story'` will be `['/about-us', '/story']`
+
 ## Options
 
 ```javascript

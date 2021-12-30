@@ -1,7 +1,7 @@
 <script>
-  import { Route, router, path, query, hash } from '../../src/index'
+  import { Route, router, path, query, hash, pathToArray } from '../../src/index'
 
-  // For ../../../src/indexd
+  // For custom URL field
   let customURL = ''
   // For roure destroy reactivity test
   let bool = true
@@ -16,7 +16,7 @@
   <!-- Always will be shown -->
   <nav>
     <!-- Stores -->
-    $path: "{$path}" | $query: "{$query}" | $hash: "{$hash}"
+    $path: "{$path}" | $query: "{$query}" | $hash: "{$hash}" | pathToArray: [{pathToArray($path)}]
 
     <hr />
 
