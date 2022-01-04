@@ -3,7 +3,7 @@
 <script>
   import { onDestroy, getContext, setContext, hasContext } from 'svelte'
   import { writable } from 'svelte/store'
-  import { path as globalPath } from '../lib/stores'
+  import { path as globalPath } from '../stores'
   import getRouteDepth from '../lib/getRouteDepth'
   import isRouteActive from '../lib/isRouteActive'
 
