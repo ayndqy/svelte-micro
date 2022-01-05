@@ -7,7 +7,6 @@ const setOptions = (changedOptions = {}) => Object.assign(options, changedOption
 const router = {
   push,
   replace,
-  options,
   setOptions,
 }
 

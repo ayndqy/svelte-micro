@@ -6,6 +6,7 @@ export declare class Route {
     path?: string
     fallback?: boolean
   }
+
   $$slot_def: { default: {} }
 }
 
@@ -13,7 +14,6 @@ export declare const router: {
   push(href: string): void
   replace(href: string): void
 
-  options: RouterOptions
   setOptions(changedOptions: Partial<RouterOptions>): RouterOptions
 }
 
