@@ -16,7 +16,7 @@
 
   const contextRoute = getContext('_route')
   const contextChildren = getContext('_children') ?? writable([])
-  const contextIndex = $contextChildren?.length
+  const contextIndex = $contextChildren?.length ?? 0
 
   $: $route = {
     root,

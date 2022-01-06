@@ -8,8 +8,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "rollup": "^2.62.0",
+    "@rollup/plugin-node-resolve": "^13.1.0",
+    "rollup": "^2.63.0",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.1.0",
@@ -17,6 +17,6 @@
     "svelte": "^3.38.0"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^2.0.0"
   }
 }
