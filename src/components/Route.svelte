@@ -1,5 +1,10 @@
 <svelte:options immutable={false} />
 
+<script context="module">
+  const ROUTE_KEY = {}
+  const CHILDREN_KEY = {}
+</script>
+
 <script>
   import { onDestroy, getContext, setContext, hasContext } from 'svelte'
   import { writable } from 'svelte/store'
@@ -10,12 +15,12 @@
   export let fallback = false
   export let path = '/'
 
-  const root = !hasContext('_route')
+  const root = !hasContext(ROUTE_KEY)
   const route = writable({})
   const children = writable([])
 
-  const contextRoute = getContext('_route')
-  const contextChildren = getContext('_children') ?? writable([])
+  const contextRoute = getContext(ROUTE_KEY)
+  const contextChildren = getContext(CHILDREN_KEY) ?? writable([])
   const contextIndex = $contextChildren?.length ?? 0
 
   $: $route = {
@@ -28,8 +33,8 @@
   $: $contextChildren[contextIndex] = $route
   onDestroy(() => ($contextChildren[contextIndex] = null))
 
-  setContext('_route', route)
-  setContext('_children', children)
+  setContext(ROUTE_KEY, route)
+  setContext(CHILDREN_KEY, children)
 </script>
 
 {#if isRouteActive($globalPath, $route.root, $route.fallback, $route.path, $route.depth, $contextChildren)}
