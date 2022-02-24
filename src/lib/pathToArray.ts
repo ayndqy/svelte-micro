@@ -1,4 +1,6 @@
-const pathToArray = (path) => {
+import type { PathToArray } from '../types/PathToArray'
+
+const pathToArray: PathToArray = (path) => {
   return path
     .split('/')
     .filter((path) => path !== '')

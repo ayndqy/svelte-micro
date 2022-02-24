@@ -1,5 +1,5 @@
 <script>
-  import { Route, router, path, query, hash, pathToArray } from '../../src/index'
+  import { Route, router, path, query, hash, pathToArray } from '../../dist/index.mjs'
 
   // For custom URL field
   let customURL = ''
