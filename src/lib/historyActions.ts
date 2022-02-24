@@ -1,4 +1,4 @@
-import type { Router } from '../types/Router'
+import type { Router } from '../router'
 
 export const push: Router['push'] = (href = '/') => {
   history.pushState({}, null, href)

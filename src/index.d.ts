@@ -1,7 +1,7 @@
-import type { Route as RouteData } from './Route'
-import type { Router } from '../Router'
-import type { Path, Query, Hash } from './types/Stores'
-import type { PathToArray } from './PathToArray'
+import type { RouteData } from './lib/RouteData'
+import type { Router } from './router'
+import type { Path, Query, Hash } from './stores'
+import type { PathToArray } from './lib/pathToArray'
 
 export declare class Route {
   $$prop_def: {

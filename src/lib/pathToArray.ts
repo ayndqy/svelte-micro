@@ -1,4 +1,4 @@
-import type { PathToArray } from '../types/PathToArray'
+export type PathToArray = (path: string) => string[]
 
 const pathToArray: PathToArray = (path) => {
   return path

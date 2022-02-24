@@ -1,4 +1,4 @@
-export type Route = {
+export type RouteData = {
   root: boolean
   fallback: boolean
   path: string

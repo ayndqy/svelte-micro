@@ -1,4 +1,4 @@
-import type { Router } from 'src/types/Router'
+import type { Router } from '../router'
 import linkClickHandler from './linkClickHandler'
 
 export class RouterOptions {

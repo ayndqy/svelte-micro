@@ -1,5 +1,8 @@
-import type { Path, Query, Hash } from './types/Stores'
-import { readable } from 'svelte/store'
+import { type Readable, readable } from 'svelte/store'
+
+export type Path = Readable<string>
+export type Query = Readable<string>
+export type Hash = Readable<string>
 
 export const path: Path = readable(location.pathname, (set) => {
   let eventHandler = () => set(location.pathname)

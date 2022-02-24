@@ -1,10 +1,10 @@
-import type { Route } from '../types/Route'
+import type { RouteData } from './RouteData'
 import pathToArray from './pathToArray'
 
 const isFallbackActive = (
   globalPath: string,
-  depth: Route['depth'],
-  contextChildren: Route[]
+  depth: RouteData['depth'],
+  contextChildren: RouteData[]
 ) => {
   let hasContextActiveChild = false
 
@@ -27,9 +27,9 @@ const isFallbackActive = (
 
 const isPathActive = (
   globalPath: string,
-  root: Route['root'],
-  path: Route['path'],
-  depth: Route['depth']
+  root: RouteData['root'],
+  path: RouteData['path'],
+  depth: RouteData['depth']
 ) => {
   if (path === '/') {
     return root || pathToArray(globalPath).length === depth
@@ -45,11 +45,11 @@ const isPathActive = (
 
 const isRouteActive = (
   globalPath: string,
-  root: Route['root'],
-  fallback: Route['fallback'],
-  path: Route['path'],
-  depth: Route['depth'],
-  contextChildren: Route[]
+  root: RouteData['root'],
+  fallback: RouteData['fallback'],
+  path: RouteData['path'],
+  depth: RouteData['depth'],
+  contextChildren: RouteData[]
 ) => {
   return fallback
     ? isFallbackActive(globalPath, depth, contextChildren)
