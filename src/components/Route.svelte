@@ -16,7 +16,6 @@
 
   export let fallback: RouteData['fallback'] = false
   export let path: RouteData['path'] = '/'
-
   const root: RouteData['root'] = !hasContext(ROUTE_KEY)
   const route: Writable<RouteData> = writable(null)
   const children: Writable<RouteData[]> = writable([])

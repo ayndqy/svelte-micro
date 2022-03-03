@@ -1,56 +1,61 @@
 import type { RouteData } from './RouteData'
 import pathToArray from './pathToArray'
 
-const isFallbackActive = (
-  globalPath: string,
-  depth: RouteData['depth'],
-  contextChildren: RouteData[]
-) => {
-  let hasContextActiveChild = false
-
-  for (let i = 0; i < contextChildren?.length; i++) {
-    hasContextActiveChild =
-      contextChildren[i] &&
-      !contextChildren[i]?.fallback &&
-      isPathActive(
-        globalPath,
-        contextChildren[i].root,
-        contextChildren[i].path,
-        contextChildren[i].depth
-      )
-
-    if (hasContextActiveChild) break
-  }
-
-  return pathToArray(globalPath).length >= depth && !hasContextActiveChild
-}
-
-const isPathActive = (
-  globalPath: string,
-  root: RouteData['root'],
-  path: RouteData['path'],
-  depth: RouteData['depth']
-) => {
-  if (path === '/') {
-    return root || pathToArray(globalPath).length === depth
-  } else {
-    let pathScope = ''
-
-    for (let i = depth - pathToArray(path).length; i < depth; i++)
-      pathScope = pathScope + pathToArray(globalPath)[i]
-
-    return path === pathScope
-  }
-}
-
-const isRouteActive = (
+type isRoute = (
   globalPath: string,
   root: RouteData['root'],
   fallback: RouteData['fallback'],
   path: RouteData['path'],
   depth: RouteData['depth'],
   contextChildren: RouteData[]
-) => {
+) => boolean
+
+type isFallback = (
+  globalPath: string,
+  depth: RouteData['depth'],
+  contextChildren: RouteData[]
+) => boolean
+
+type isPath = (
+  globalPath: string,
+  root: RouteData['root'],
+  path: RouteData['path'],
+  depth: RouteData['depth']
+) => boolean
+
+const isRouteActive: isRoute = (globalPath, root, fallback, path, depth, contextChildren) => {
+  const isFallbackActive: isFallback = (globalPath, depth, contextChildren) => {
+    let isActiveRoutes = false
+
+    for (let i = 0; i < contextChildren?.length; i++) {
+      if (!contextChildren[i] && contextChildren[i].fallback) continue
+
+      isActiveRoutes = isPathActive(
+        globalPath,
+        contextChildren[i].root,
+        contextChildren[i].path,
+        contextChildren[i].depth
+      )
+
+      if (isActiveRoutes) break
+    }
+
+    return pathToArray(globalPath).length >= depth && !isActiveRoutes
+  }
+
+  const isPathActive: isPath = (globalPath, root, path, depth) => {
+    if (path === '/') {
+      return root || pathToArray(globalPath).length === depth
+    } else {
+      let pathScope = ''
+
+      for (let i = depth - pathToArray(path).length; i < depth; i++)
+        pathScope = pathScope + pathToArray(globalPath)[i]
+
+      return path === pathScope
+    }
+  }
+
   return fallback
     ? isFallbackActive(globalPath, depth, contextChildren)
     : isPathActive(globalPath, root, path, depth)

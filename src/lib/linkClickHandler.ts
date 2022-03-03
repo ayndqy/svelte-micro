@@ -1,6 +1,8 @@
 import { push, replace } from './historyActions'
 
-const linkClickHandler = (event: MouseEvent) => {
+type LinkClickHandler = (event: MouseEvent) => void
+
+const linkClickHandler: LinkClickHandler = (event) => {
   let target = (event.target as HTMLElement).closest('a[href]')
   let isTargetInvalid =
     target === null ||

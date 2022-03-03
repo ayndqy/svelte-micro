@@ -2,7 +2,7 @@ import type { Router } from '../router'
 import linkClickHandler from './linkClickHandler'
 
 export class RouterOptions {
-  #reloadPrevent: boolean = true
+  #reloadPrevent: boolean
 
   constructor(reloadPrevent: boolean = true) {
     this.#reloadPrevent = reloadPrevent
