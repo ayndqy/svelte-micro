@@ -7,13 +7,13 @@ type isRoute = (
   fallback: RouteData['fallback'],
   path: RouteData['path'],
   depth: RouteData['depth'],
-  contextChildren: RouteData[]
+  contextChildren: (RouteData | null)[]
 ) => boolean
 
 type isFallback = (
   globalPath: string,
   depth: RouteData['depth'],
-  contextChildren: RouteData[]
+  contextChildren: (RouteData | null)[]
 ) => boolean
 
 type isPath = (
@@ -28,7 +28,7 @@ const isRouteActive: isRoute = (globalPath, root, fallback, path, depth, context
     let isActiveRoutes = false
 
     for (let i = 0; i < contextChildren?.length; i++) {
-      if (!contextChildren[i] && contextChildren[i].fallback) continue
+      if (contextChildren[i] === null || contextChildren[i].fallback) continue
 
       isActiveRoutes = isPathActive(
         globalPath,

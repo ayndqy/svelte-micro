@@ -1,8 +1,8 @@
 <svelte:options immutable={false} />
 
 <script context="module">
-  const ROUTE_KEY = {}
-  const CHILDREN_KEY = {}
+  const ROUTE = {}
+  const CHILDREN = {}
 </script>
 
 <script lang="ts">
@@ -16,11 +16,11 @@
 
   export let fallback: RouteData['fallback'] = false
   export let path: RouteData['path'] = '/'
-  const root: RouteData['root'] = !hasContext(ROUTE_KEY)
-  const route: Writable<RouteData> = writable(null)
+  const root: RouteData['root'] = !hasContext(ROUTE)
+  const route: Writable<RouteData | null> = writable(null)
   const children: Writable<RouteData[]> = writable([])
-  const contextRoute: Writable<RouteData> = getContext(ROUTE_KEY)
-  const contextChildren: Writable<RouteData[]> = getContext(CHILDREN_KEY) ?? writable([])
+  const contextRoute: Writable<RouteData> = getContext(ROUTE)
+  const contextChildren: Writable<(RouteData | null)[]> = getContext(CHILDREN) ?? writable([])
   const contextIndex: number = $contextChildren?.length ?? 0
 
   $: $route = {
@@ -33,8 +33,8 @@
   $: $contextChildren[contextIndex] = $route
   onDestroy(() => ($contextChildren[contextIndex] = null))
 
-  setContext(ROUTE_KEY, route)
-  setContext(CHILDREN_KEY, children)
+  setContext(ROUTE, route)
+  setContext(CHILDREN, children)
 </script>
 
 {#if isRouteActive($globalPath, $route.root, $route.fallback, $route.path, $route.depth, $contextChildren)}
