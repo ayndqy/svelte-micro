@@ -1,4 +1,3 @@
-import type { Router } from '../router'
 import linkClickHandler from './linkClickHandler'
 
 export class RouterOptions {
@@ -14,7 +13,6 @@ export class RouterOptions {
       ? window.addEventListener('click', linkClickHandler)
       : window.removeEventListener('click', linkClickHandler)
   }
-
   get reloadPrevent() {
     return this.#reloadPrevent
   }
@@ -25,5 +23,7 @@ export class RouterOptions {
 }
 
 export const options = new RouterOptions()
-export const setOptions: Router['setOptions'] = (changedOptions = {}) =>
+
+export type SetOptions = (changedOptions: Partial<RouterOptions>) => RouterOptions
+export const setOptions: SetOptions = (changedOptions = {}) =>
   Object.assign(options, changedOptions)

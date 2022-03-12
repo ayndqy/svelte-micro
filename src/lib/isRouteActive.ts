@@ -1,26 +1,26 @@
-import type { RouteData } from './RouteData'
+import type { RouteParams } from '../components/Route.svelte'
 import pathToArray from './pathToArray'
 
 type isRoute = (
   globalPath: string,
-  root: RouteData['root'],
-  fallback: RouteData['fallback'],
-  path: RouteData['path'],
-  depth: RouteData['depth'],
-  contextChildren: (RouteData | null)[]
+  root: RouteParams['root'],
+  fallback: RouteParams['fallback'],
+  path: RouteParams['path'],
+  depth: RouteParams['depth'],
+  contextChildren: (RouteParams | null)[]
 ) => boolean
 
 type isFallback = (
   globalPath: string,
-  depth: RouteData['depth'],
-  contextChildren: (RouteData | null)[]
+  depth: RouteParams['depth'],
+  contextChildren: (RouteParams | null)[]
 ) => boolean
 
 type isPath = (
   globalPath: string,
-  root: RouteData['root'],
-  path: RouteData['path'],
-  depth: RouteData['depth']
+  root: RouteParams['root'],
+  path: RouteParams['path'],
+  depth: RouteParams['depth']
 ) => boolean
 
 const isRouteActive: isRoute = (globalPath, root, fallback, path, depth, contextChildren) => {

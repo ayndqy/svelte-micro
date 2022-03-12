@@ -1,12 +1,12 @@
-import type { RouteData } from './src/lib/RouteData'
+import type { RouteParams } from './src/components/Route.svelte'
 import type { Router } from './src/router'
 import type { Path, Query, Hash } from './src/stores'
 import type { PathToArray } from './src/lib/pathToArray'
 
 export declare class Route {
   $$prop_def: {
-    path?: RouteData['path']
-    fallback?: RouteData['fallback']
+    path?: RouteParams['path']
+    fallback?: RouteParams['fallback']
   }
   $$slot_def: { default: {} }
 }

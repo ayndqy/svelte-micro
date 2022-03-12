@@ -1,11 +1,10 @@
-import type { RouterOptions } from './lib/routerOptions'
-import { push, replace } from './lib/historyActions'
-import { setOptions } from './lib/routerOptions'
+import { type Push, type Replace, push, replace } from './lib/historyActions'
+import { type SetOptions, setOptions } from './lib/routerOptions'
 
 export type Router = {
-  push(href: string): string
-  replace(href: string): string
-  setOptions(changedOptions: Partial<RouterOptions>): RouterOptions
+  push: Push
+  replace: Replace
+  setOptions: SetOptions
 }
 
 const router: Router = { push, replace, setOptions }
