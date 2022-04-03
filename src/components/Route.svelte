@@ -41,10 +41,8 @@
   // Key for updating route in contextChildren
   const CONTEXT_CHILDREN_KEY: number = $contextChildren?.length ?? 0
 
-  // Update depth
+  // Update route params
   $: depth = getRouteDepth(fallback, path, $contextRoute?.depth ?? 0)
-
-  // Update route
   $: $route = { root, fallback, path, depth }
 
   // Update route in contextChildren

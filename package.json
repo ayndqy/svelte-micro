@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Light & reactive one-component router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -29,7 +29,7 @@
     "tslib": "^2.3.0",
     "svelte": "^3.46.0",
     "svelte-preprocess": "^4.10.0",
-    "esbuild-svelte": "^0.6.0",
+    "esbuild-svelte": "^0.7.0",
     "@tsconfig/svelte": "^3.0.0"
   },
   "prettier": {
