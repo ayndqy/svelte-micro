@@ -21,3 +21,7 @@ export const hash: Hash = readable(location.hash, (set) => {
   window.addEventListener('popstate', eventHandler)
   return () => window.removeEventListener('popstate', eventHandler)
 })
+
+path.subscribe(() => {})
+query.subscribe(() => {})
+hash.subscribe(() => {})
