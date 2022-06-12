@@ -1,12 +1,15 @@
 {
   "name": "svelte-micro",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "Light & reactive one-component router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
-  "types": "index.d.ts",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
   "homepage": "https://github.com/ayndqy/svelte-micro#readme",
   "repository": {
     "type": "git",
@@ -20,12 +23,13 @@
     "router"
   ],
   "scripts": {
-    "build": "node esbuild",
-    "prepublishOnly": "node esbuild"
+    "types": "rm -rf ./dist/types && tsc && cp -r ./src/components ./dist/types/components",
+    "build": "rm -rf ./dist && node esbuild && npm run types",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "esbuild": "^0.14.0",
-    "typescript": "^4.6.0",
+    "typescript": "^4.7.0",
     "tslib": "^2.4.0",
     "svelte": "^3.48.0",
     "svelte-preprocess": "^4.10.0",

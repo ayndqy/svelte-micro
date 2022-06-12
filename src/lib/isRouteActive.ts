@@ -1,4 +1,4 @@
-import type { RouteParams } from '../components/Route.svelte'
+import type { RouteParams } from './routeParams'
 import pathToArray from './pathToArray'
 
 type isRoute = (

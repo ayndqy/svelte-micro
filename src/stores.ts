@@ -1,27 +1,15 @@
-import { type Readable, readable } from 'svelte/store'
+import { type Readable, readable, derived } from 'svelte/store'
+
+const locationStore = readable(location, (set) => {
+  const handler = () => set(location)
+  window.addEventListener('popstate', handler)
+  return () => window.removeEventListener('popstate', handler)
+})
 
 export type Path = Readable<string>
 export type Query = Readable<string>
 export type Hash = Readable<string>
 
-export const path: Path = readable(location.pathname, (set) => {
-  let eventHandler = () => set(location.pathname)
-  window.addEventListener('popstate', eventHandler)
-  return () => window.removeEventListener('popstate', eventHandler)
-})
-
-export const query: Query = readable(location.search, (set) => {
-  let eventHandler = () => set(location.search)
-  window.addEventListener('popstate', eventHandler)
-  return () => window.removeEventListener('popstate', eventHandler)
-})
-
-export const hash: Hash = readable(location.hash, (set) => {
-  let eventHandler = () => set(location.hash)
-  window.addEventListener('popstate', eventHandler)
-  return () => window.removeEventListener('popstate', eventHandler)
-})
-
-path.subscribe(() => {})
-query.subscribe(() => {})
-hash.subscribe(() => {})
+export const path: Path = derived(locationStore, (value) => value.pathname)
+export const query: Query = derived(locationStore, (value) => value.search)
+export const hash: Hash = derived(locationStore, (value) => value.hash)

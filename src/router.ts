@@ -1,7 +1,7 @@
 import { type Push, type Replace, push, replace } from './lib/historyActions'
 import { type SetOptions, setOptions } from './lib/routerOptions'
 
-export type Router = {
+export interface Router {
   push: Push
   replace: Replace
   setOptions: SetOptions

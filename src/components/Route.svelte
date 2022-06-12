@@ -2,14 +2,7 @@
 
 <script lang="ts" context="module">
   import type { Writable } from 'svelte/store'
-
-  // Route params type
-  export type RouteParams = {
-    root: boolean
-    fallback: boolean
-    path: string
-    depth: number
-  }
+  import type { RouteParams } from '../lib/routeParams'
 
   // Route params store type
   type RouteStore = Writable<RouteParams | null>
