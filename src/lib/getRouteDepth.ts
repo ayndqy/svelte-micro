@@ -1,9 +1,7 @@
-import pathToArray from './pathToArray'
+import { pathToArray } from './pathToArray'
 
-type GetRouteDepth = (fallback: boolean, path: string, contextDepth: number) => number
+export type GetRouteDepth = (fallback: boolean, path: string, contextDepth: number) => number
 
-const getRouteDepth: GetRouteDepth = (fallback, path, contextDepth) => {
+export const getRouteDepth: GetRouteDepth = (fallback, path, contextDepth) => {
   return (!fallback ? pathToArray(path).length : 1) + (contextDepth ?? 0)
 }
-
-export default getRouteDepth

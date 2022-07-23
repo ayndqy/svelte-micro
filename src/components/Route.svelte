@@ -17,8 +17,8 @@
   import { onDestroy, getContext, setContext, hasContext } from 'svelte'
   import { writable } from 'svelte/store'
   import { path as globalPath } from '../stores'
-  import getRouteDepth from '../lib/getRouteDepth'
-  import isRouteActive from '../lib/isRouteActive'
+  import { getRouteDepth } from '../lib/getRouteDepth'
+  import { isRouteActive } from '../lib/isRouteActive'
 
   // Params
   const root: RouteParams['root'] = !hasContext(ROUTE_KEY)
@@ -47,6 +47,6 @@
   setContext(CHILDREN_KEY, children)
 </script>
 
-{#if isRouteActive($globalPath, $route.root, $route.fallback, $route.path, $route.depth, $contextChildren)}
+{#if isRouteActive($globalPath, $route, $contextChildren)}
   <slot />
 {/if}

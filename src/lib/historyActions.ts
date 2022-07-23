@@ -1,5 +1,4 @@
 export type Push = (href: string) => string
-export type Replace = (href: string) => string
 
 export const push: Push = (href = '/') => {
   history.pushState({}, null, href)
@@ -7,6 +6,8 @@ export const push: Push = (href = '/') => {
 
   return href
 }
+
+export type Replace = (href: string) => string
 
 export const replace: Replace = (href = '/') => {
   history.replaceState({}, null, href)

@@ -1,7 +1,7 @@
 import { type Readable, readable, derived } from 'svelte/store'
 
-const locationStore = readable(location, (set) => {
-  const handler = () => set(location)
+const locationStore = readable(document.location, (set) => {
+  const handler = () => set(document.location)
   window.addEventListener('popstate', handler)
   return () => window.removeEventListener('popstate', handler)
 })

@@ -1,9 +1,9 @@
-const esbuild = require('esbuild')
-const svelte = require('esbuild-svelte')
-const sveltePreprocess = require('svelte-preprocess')
-const pkg = require('./package.json')
+import esbuild, { type BuildOptions } from 'esbuild'
+import svelte from 'esbuild-svelte'
+import sveltePreprocess from 'svelte-preprocess'
+import pkg from './package.json'
 
-const buildOptions = {
+const buildOptions: BuildOptions = {
   entryPoints: ['src/index.ts'],
   bundle: true,
   minify: true,

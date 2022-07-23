@@ -1,4 +1,4 @@
 export { default as Route } from './components/Route.svelte'
-export { default as router } from './router'
+export { router } from './router'
 export { path, query, hash } from './stores'
-export { default as pathToArray } from './lib/pathToArray'
+export { pathToArray } from './lib/pathToArray'

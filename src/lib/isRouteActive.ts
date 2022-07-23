@@ -1,64 +1,62 @@
 import type { RouteParams } from './routeParams'
-import pathToArray from './pathToArray'
+import { pathToArray } from './pathToArray'
 
-type isRoute = (
-  globalPath: string,
-  root: RouteParams['root'],
-  fallback: RouteParams['fallback'],
-  path: RouteParams['path'],
-  depth: RouteParams['depth'],
-  contextChildren: (RouteParams | null)[]
-) => boolean
-
-type isFallback = (
-  globalPath: string,
-  depth: RouteParams['depth'],
-  contextChildren: (RouteParams | null)[]
-) => boolean
-
-type isPath = (
+type IsPathActive = (
   globalPath: string,
   root: RouteParams['root'],
   path: RouteParams['path'],
   depth: RouteParams['depth']
 ) => boolean
 
-const isRouteActive: isRoute = (globalPath, root, fallback, path, depth, contextChildren) => {
-  const isFallbackActive: isFallback = (globalPath, depth, contextChildren) => {
-    let isActiveRoutes = false
+const isPathActive: IsPathActive = (globalPath, root, path, depth) => {
+  if (path === '/') {
+    return root || pathToArray(globalPath).length === depth
+  } else {
+    let pathScope = ''
 
-    for (let i = 0; i < contextChildren?.length; i++) {
-      if (contextChildren[i] === null || contextChildren[i].fallback) continue
-
-      isActiveRoutes = isPathActive(
-        globalPath,
-        contextChildren[i].root,
-        contextChildren[i].path,
-        contextChildren[i].depth
-      )
-
-      if (isActiveRoutes) break
+    for (let i = depth - pathToArray(path).length; i < depth; i++) {
+      pathScope = pathScope + pathToArray(globalPath)[i]
     }
 
-    return pathToArray(globalPath).length >= depth && !isActiveRoutes
+    return path === pathScope
+  }
+}
+
+type IsFallbackActive = (
+  globalPath: string,
+  depth: RouteParams['depth'],
+  contextChildren: (RouteParams | null)[]
+) => boolean
+
+const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) => {
+  let hasActiveRoutes = false
+
+  for (let i = 0; i < contextChildren?.length; i++) {
+    if (contextChildren[i] === null || contextChildren[i].fallback) continue
+
+    hasActiveRoutes = isPathActive(
+      globalPath,
+      contextChildren[i].root,
+      contextChildren[i].path,
+      contextChildren[i].depth
+    )
+
+    if (hasActiveRoutes) break
   }
 
-  const isPathActive: isPath = (globalPath, root, path, depth) => {
-    if (path === '/') {
-      return root || pathToArray(globalPath).length === depth
-    } else {
-      let pathScope = ''
+  return pathToArray(globalPath).length >= depth && !hasActiveRoutes
+}
 
-      for (let i = depth - pathToArray(path).length; i < depth; i++)
-        pathScope = pathScope + pathToArray(globalPath)[i]
+export type IsRouteActive = (
+  globalPath: string,
+  route: RouteParams,
+  contextChildren: (RouteParams | null)[]
+) => boolean
 
-      return path === pathScope
-    }
-  }
+export const isRouteActive: IsRouteActive = (globalPath, route, contextChildren) => {
+  const { root, fallback, path, depth } = route
 
   return fallback
     ? isFallbackActive(globalPath, depth, contextChildren)
     : isPathActive(globalPath, root, path, depth)
 }
-
-export default isRouteActive

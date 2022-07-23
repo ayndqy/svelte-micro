@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Light & reactive one-component router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -23,18 +23,18 @@
     "router"
   ],
   "scripts": {
-    "types": "rm -rf ./dist/types && tsc && cp -r ./src/components ./dist/types/components",
-    "build": "rm -rf ./dist && node esbuild && npm run types",
+    "build": "rm -rf ./dist && ts-node ./build.ts && tsc && cp -r ./src/components ./dist/types/components",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@tsconfig/svelte": "^3.0.0",
     "esbuild": "^0.14.0",
-    "typescript": "^4.7.0",
-    "tslib": "^2.4.0",
-    "svelte": "^3.48.0",
-    "svelte-preprocess": "^4.10.0",
     "esbuild-svelte": "^0.7.0",
-    "@tsconfig/svelte": "^3.0.0"
+    "svelte": "^3.49.0",
+    "svelte-preprocess": "^4.10.0",
+    "ts-node": "^10.9.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.0"
   },
   "prettier": {
     "tabWidth": 2,
