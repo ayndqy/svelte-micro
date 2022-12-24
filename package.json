@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -9,13 +9,13 @@
     "type": "git",
     "url": "git+https://github.com/ayndqy/svelte-micro.git"
   },
+  "bugs": {
+    "url": "https://github.com/ayndqy/svelte-micro/issues"
+  },
   "keywords": [
     "svelte",
     "router"
   ],
-  "bugs": {
-    "url": "https://github.com/ayndqy/svelte-micro/issues"
-  },
   "type": "module",
   "scripts": {
     "build": "svelte-kit sync && svelte-package",

@@ -21,7 +21,7 @@ const parseLocation = (fragment: string): Location => {
 
 const getWindowLocation = (): Location => {
   const { pathname, search, hash } = document.location
-  return parseLocation(pathname + hash + search)
+  return parseLocation(pathname + search + hash)
 }
 
 const getHashLocation = (): Location => {
