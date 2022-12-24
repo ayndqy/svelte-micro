@@ -1,47 +1,35 @@
 {
   "name": "svelte-micro",
-  "version": "1.15.0",
-  "description": "Light & reactive one-component router for Svelte",
+  "version": "2.0.0",
+  "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
-  "module": "dist/index.mjs",
-  "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
-  "files": [
-    "dist/*"
-  ],
   "homepage": "https://github.com/ayndqy/svelte-micro#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ayndqy/svelte-micro.git"
   },
-  "bugs": {
-    "url": "https://github.com/ayndqy/svelte-micro/issues"
-  },
   "keywords": [
     "svelte",
     "router"
   ],
+  "bugs": {
+    "url": "https://github.com/ayndqy/svelte-micro/issues"
+  },
+  "type": "module",
   "scripts": {
-    "build": "rm -rf ./dist && ts-node ./build.ts && tsc && cp -r ./src/components ./dist/types/components",
-    "prepublishOnly": "npm run build"
+    "build": "svelte-kit sync && svelte-package",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "prepublishOnly": "echo 'Did you mean to publish `./package/`, instead of `./`?' && exit 1"
+  },
+  "peerDependencies": {
+    "svelte": "^3.55.0"
   },
   "devDependencies": {
-    "@tsconfig/svelte": "^3.0.0",
-    "esbuild": "^0.14.0",
-    "esbuild-svelte": "^0.7.0",
-    "svelte": "^3.49.0",
-    "svelte-preprocess": "^4.10.0",
-    "ts-node": "^10.9.0",
+    "@sveltejs/kit": "^1.0.0",
+    "@sveltejs/package": "^1.0.0",
+    "svelte-check": "^3.0.0",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.0"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "printWidth": 108,
-    "svelteSortOrder": "scripts-markup-styles"
+    "typescript": "^4.9.0"
   }
 }

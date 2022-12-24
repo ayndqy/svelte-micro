@@ -1,17 +1,13 @@
-import { type Push, type Replace, push, replace } from './lib/historyActions'
-import { type Options, options } from './lib/оptions'
-import { linkHandleInit } from './lib/linkHandle'
+import { type Go, type Push, type Replace, go, push, replace } from './lib/historyActions'
 
 export interface Router {
+  go: Go
   push: Push
   replace: Replace
-  setOptions: Options['set']
 }
 
 export const router: Router = {
-  push,
-  replace,
-  setOptions: options.set,
+  go: go,
+  push: push,
+  replace: replace,
 }
-
-linkHandleInit(options)

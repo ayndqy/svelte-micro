@@ -32,13 +32,13 @@ const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) 
   let hasActiveRoutes = false
 
   for (let i = 0; i < contextChildren?.length; i++) {
-    if (contextChildren[i] === null || contextChildren[i].fallback) continue
+    if (contextChildren[i] === null || contextChildren[i]?.fallback) continue
 
     hasActiveRoutes = isPathActive(
       globalPath,
-      contextChildren[i].root,
-      contextChildren[i].path,
-      contextChildren[i].depth
+      contextChildren[i]?.root ?? false,
+      contextChildren[i]?.path ?? '',
+      contextChildren[i]?.depth ?? 0
     )
 
     if (hasActiveRoutes) break

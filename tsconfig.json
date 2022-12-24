@@ -1,23 +1,8 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
+  "extends": "./.svelte-kit/tsconfig.json",
 
-  // Project
   "compilerOptions": {
-    "types": ["svelte", "node"],
-    "target": "esnext",
-    "module": "esnext",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "./dist/types/"
-  },
-  "include": ["./src/**/*"],
-
-  // build.ts
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "resolveJsonModule": true
-    },
-    "include": ["./build.ts"]
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

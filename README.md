@@ -1,15 +1,15 @@
 # Svelte Micro
 
-Light & reactive one-component router for Svelte
+Light & reactive router for Svelte.
 
 ## Table of content
 
 - [Installation](#installation)
 - [Example](#example)
-- [Links](#links)
-- [Component](#component)
+- [Route](#route)
+- [Link](#link)
 - [Stores](#stores)
-- [Methods](#methods)
+- [Methods and Functions](#methods-and-functions)
 - [Options](#options)
 - [Tips](#tips)
 
@@ -23,20 +23,21 @@ $ npm i svelte-micro
 
 ```svelte
 <script>
-  import { Route } from "svelte-micro";
+  import { Route, Link } from "svelte-micro";
 </script>
 
+<!-- Root component's path allways should be equal to the '/' -->
 <Route>
   <!-- Always will be shown -->
   <nav>
-    <a href="/">Home</a>
-    <a href="/portfolio">Portfolio</a>
-    <a href="/about-us/story">Our story</a>
+    <Link href="/">Home</Link>
+    <Link href="/portfolio">Portfolio</Link>
+    <Link href="/about-us/story">Our story</Link>
     <!-- External link -->
-    <a href="https://github.com/ayndqy/svelte-micro" external-href>Github</a>
+    <a href="https://github.com/ayndqy/svelte-micro">Github</a>
   </nav>
 
-  <!-- Will be shown only when the page path is equal to the '/' -->
+  <!-- Will be shown only when the $path is equal to the '/' -->
   <Route path="/">
     <h1>Home page</h1>
     <p>Feel at home!</p>
@@ -47,23 +48,23 @@ $ npm i svelte-micro
 
     <Route path="/">
       <h2>Portfolio main page</h2>
-      <a href="/portfolio/sites">Sites</a>
-      <a href="/portfolio/apps">Apps</a>
+      <Link href="/portfolio/sites">Sites</Link>
+      <Link href="/portfolio/apps">Apps</Link>
     </Route>
 
     <Route path="/sites">
       <h2>Sites</h2>
-      <a href="/portfolio">Back to portfolio main page</a>
+      <Link href="/portfolio">Back to portfolio main page</Link>
     </Route>
 
     <Route path="/apps">
       <h2>Apps</h2>
-      <a href="/portfolio">Back to portfolio main page</a>
+      <Link href="/portfolio">Back to portfolio main page</Link>
     </Route>
 
     <Route fallback>
-      <h2>Route not found in portfolio :(</h2>
-      <a href="/portfolio">Back to portfolio main page</a>
+      <h2>The route is not found in /portfolio</h2>
+      <Link href="/portfolio">Back to portfolio main page</Link>
     </Route>
   </Route>
 
@@ -72,28 +73,18 @@ $ npm i svelte-micro
   </Route>
 
   <Route fallback>
-    <h1>Route not found :(</h1>
-    <a href="/">Back to home</a>
+    <h1>The route is not found</h1>
+    <Link href="/">Back to home</Link>
   </Route>
 </Route>
 ```
 
-This code shows the capabilities of `svelte-micro`
+This code shows the capabilities of the `svelte-micro`.
+Spend a minute analyzing this example to understand the approach of the routing system.
 
-## Links
+For the advanced examples see the [Tips](#tips) section.
 
-```svelte
-<a
-  href="/"
-  external-href={false}
-/>
-```
-
-All links that begin with `'https://'`, `'http://'`, `'//'`, `mailto:`, `tel:` will be ignored by svelte-micro
-
-If you want svelte-micro to ignore all links use [`linkHandle`](#options) option
-
-## Component
+## Route
 
 ```svelte
 <script>
@@ -107,13 +98,50 @@ If you want svelte-micro to ignore all links use [`linkHandle`](#options) option
 />
 ```
 
-All `<Route />` props are reactive
+The `<Route />` props are reactive.
+
+The root component's path always should be equal to the '/'.
+
+## Link
+
+```svelte
+<script lang="ts">
+  import { type LinkHandle, Link, linkHandle } from 'svelte-micro';
+</script>
+
+<!-- Default props value -->
+<Link href='/'>
+  Home
+</Link>
+
+<a href="/" use:linkHandle>
+  Home
+</a>
+```
+
+### `<Link />`
+
+The `<Link />` component should be used for the internal application navigation.
+It automatically prevents the window from refreshing.
+
+If the [`basePath` option](#options) isn't set to the `null`, the `<Link />` component will append the `basePath` to the `href` attribute.
+
+If the [`mode` option](#options) is set to the `"hash"`, the `<Link />` component will append a `#` to the beginnig of the `href` attribute.
+
+### `linkHandle`
+
+The `linkHandle` action prevents the window from refreshing when the user clicks this link.
 
 ## Stores
 
 ```svelte
-<script>
-  import { path, query, hash } from 'svelte-micro';
+<script lang="ts">
+  import { type Path, type Query, type Hash, path, query, hash } from 'svelte-micro';
+
+  // For example the location equals to "/portfolio/work?id=3#gallery"
+  // $path == "/portfolio/work"
+  // $query == "?id=3"
+  // $hash == "#gallery"
 </script>
 
 Current path is {$path}
@@ -121,40 +149,59 @@ Current query is {$query}
 Current hash is {$hash}
 ```
 
-- **`$path`**
+- **`$path`**\
+  `Readable<string>`\
+  The store which contains current path fragment.
 
-- **`$query`**
+- **`$query`**\
+  `Readable<string>`\
+  The store which contains current query fragment.
 
-- **`$hash`**
+- **`$hash`**\
+  `Readable<string>`\
+  The store which contains current hash fragment.
 
-## Methods
+## Methods and Functions
 
 ```javascript
-import { router, pathToArray } from 'svelte-micro'
+import { type Router, type PathToArray, router, pathToArray } from 'svelte-micro'
 ```
 
-- **`router.push(href = '/')`**\
-  Push new url to history
+- **`router.push(url: string = '/')`**\
+  Push new url to the history.
 
-- **`router.replace(href = '/')`**\
-  Replace current url in history
+- **`router.replace(url: string = '/')`**\
+  Replace current url in the history.
 
-- **`router.setOptions(changedOptions = {})`**\
-  Set [options](#options) for router
+- **`router.go(delta: number = '0')`**\
+  Move on `delta` steps through the history.
 
-- **`pathToArray(path)`**\
-  For example: `'/about-us/story'` will be `['/about-us', '/story']`
+- **`pathToArray(path: string)`**\
+  Split path. For example: `'/about-us/story'` will be `['/about-us', '/story']`.
 
 ## Options
 
-```javascript
-import { router } from 'svelte-micro'
+```typescript
+import { type Options, type OptionsList, options } from 'svelte-micro'
 
 // Default values
-router.setOptions({
-  linkHandle: true,
-})
+const defaultOptions: OptionsList = {
+  mode: 'window',
+  basePath: null,
+}
+
+options.set(defaultOptions)
 ```
+
+- **`mode`**\
+  `'window' | 'hash'`\
+  Set the `mode` for the router.
+  Be aware that if the `mode` option is set to the `"hash"`, the router will try to ignore the `basePath` found in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
+
+- **`basePath`**\
+  `null | string`\
+  Set the `basePath` for the router.
+  If the `basePath` will be not found in the beginning of the `$path`, the router will work ignoring the `basePath` option. However, if it appears with a `$path` state change, the `basePath` will stop ignoring it.
 
 ## Tips
 
@@ -172,7 +219,7 @@ if ('scrollRestoration' in history) {
 path.subscribe(() => window.scrollTo(0, 0))
 ```
 
-By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own
+By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own.
 
 ### Stores usage
 
@@ -180,7 +227,7 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 <script>
   import { path, query, hash } from 'svelte-micro';
 
-  // For example: current location equals to '/somepath?text=Hello#modal'
+  // For example the location equals to '/somepath?text=Hello#modal'
   // $path = '/somepath'
   // $query = '?text=Hello'
   // $hash = '#modal'
@@ -191,7 +238,6 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 
 <!-- Query usage example -->
 {queryData?.text}
-<!-- Result: Hello -->
 
 <!-- Hash usage example -->
 {#if $hash === '#modal'}
@@ -205,72 +251,21 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 
 ```svelte
 <script>
-  import { Route } from 'svelte-micro';
+  import { Route, router } from 'svelte-micro';
 
   let isUserAuthenticated = true;
 </script>
 
 <Route>
   {#if isUserAuthenticated}
-
     <Route path="/profile">
       <h1>Welcome!</h1>
       <button on:click={() => (isUserAuthenticated = false)}>Log out</button>
     </Route>
-
   {:else}
-
     <Route path="/profile">
-      <h1>You are not authenticated :\</h1>
-      <button on:click={() => (isUserAuthenticated = true)}>Log in</button>
+      {router.replace('/auth')}
     </Route>
-
   {/if}
-</Route>
-```
-
-### Active link
-
-```svelte
-<script>
-  import { path } from 'svelte-micro';
-
-  let href = '/home';
-</script>
-
-<a {href} class:active={href === $path}>Home</a>
-
-<style>
-  a.active {
-    color: red;
-  }
-</style>
-```
-
-### Transitions
-
-```svelte
-<script>
-  import { Route } from 'svelte-micro';
-  import { fade } from 'svelte/transition';
-</script>
-
-<Route>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/about">About</a>
-  </nav>
-
-  <Route path="/">
-    <div transition:fade>
-      <h1>Home page</h1>
-    </div>
-  </Route>
-
-  <Route path="/about">
-    <div transition:fade>
-      <h1>About page</h1>
-    </div>
-  </Route>
 </Route>
 ```
