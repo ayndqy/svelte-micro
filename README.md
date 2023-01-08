@@ -1,6 +1,6 @@
 # Svelte Micro
 
-Light & reactive router for Svelte.
+Light & reactive router for Svelte
 
 ## Table of content
 
@@ -23,7 +23,7 @@ $ npm i svelte-micro
 
 ```svelte
 <script>
-  import { Route, Link } from "svelte-micro";
+  import { Route, Link } from "svelte-micro"
 </script>
 
 <!-- Root component's path allways should be equal to the '/' -->
@@ -88,7 +88,7 @@ For the advanced examples see the [Tips](#tips) section.
 
 ```svelte
 <script>
-  import { Route } from 'svelte-micro';
+  import { Route } from 'svelte-micro'
 </script>
 
 <!-- Default props value -->
@@ -100,13 +100,13 @@ For the advanced examples see the [Tips](#tips) section.
 
 The `<Route />` props are reactive.
 
-The root component's path always should be equal to the '/'.
+The top-level (root) component's path always should be equal to the '/'.
 
 ## Link
 
 ```svelte
 <script lang="ts">
-  import { type LinkHandle, Link, linkHandle } from 'svelte-micro';
+  import { type LinkHandle, Link, linkHandle } from 'svelte-micro'
 </script>
 
 <!-- Default props value -->
@@ -136,7 +136,7 @@ The `linkHandle` action prevents the window from refreshing when the user clicks
 
 ```svelte
 <script lang="ts">
-  import { type Path, type Query, type Hash, path, query, hash } from 'svelte-micro';
+  import { type Path, type Query, type Hash, path, query, hash } from 'svelte-micro'
 
   // For example the location equals to "/portfolio/work?id=3#gallery"
   // $path == "/portfolio/work"
@@ -225,7 +225,7 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 
 ```svelte
 <script>
-  import { path, query, hash } from 'svelte-micro';
+  import { path, query, hash } from 'svelte-micro'
 
   // For example the location equals to '/somepath?text=Hello#modal'
   // $path = '/somepath'
@@ -233,7 +233,7 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
   // $hash = '#modal'
 
   // If you want to get an object with data from the query
-  $: queryData = Object.fromEntries(new URLSearchParams($query).entries());
+  $: queryData = Object.fromEntries(new URLSearchParams($query).entries())
 </script>
 
 <!-- Query usage example -->
@@ -251,9 +251,9 @@ By default svelte-micro doesn't control scroll behavior, but it's easy to do on 
 
 ```svelte
 <script>
-  import { Route, router } from 'svelte-micro';
+  import { Route, router } from 'svelte-micro'
 
-  let isUserAuthenticated = true;
+  let isUserAuthenticated = true
 </script>
 
 <Route>
