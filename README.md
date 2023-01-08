@@ -196,12 +196,12 @@ options.set(defaultOptions)
 - **`mode`**\
   `'window' | 'hash'`\
   Set the `mode` for the router.
-  Be aware that if the `mode` option is set to the `"hash"`, the router will try to ignore the `basePath` found in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
 
 - **`basePath`**\
   `null | string`\
   Set the `basePath` for the router.
   If the `basePath` will be not found in the beginning of the `$path`, the router will work ignoring the `basePath` option. However, if it appears with a `$path` state change, the `basePath` will stop ignoring it.
+  Be aware that if the `mode` option is set to the `"hash"`, the router will try to find the `basePath` in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
 
 ## Tips
 
