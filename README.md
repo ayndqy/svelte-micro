@@ -167,17 +167,17 @@ Current hash is {$hash}
 import { type Router, type PathToArray, router, pathToArray } from 'svelte-micro'
 ```
 
-- **`router.push(url: string = '/')`**\
+- **`router.push(url: string = '/') => void`**\
   Push new url to the history.
 
-- **`router.replace(url: string = '/')`**\
+- **`router.replace(url: string = '/') => void`**\
   Replace current url in the history.
 
-- **`router.go(delta: number = '0')`**\
+- **`router.go(delta: number = '0') => void`**\
   Move on `delta` steps through the history.
 
-- **`pathToArray(path: string)`**\
-  Split path. For example: `'/about-us/story'` will be `['/about-us', '/story']`.
+- **`pathToArray(path: string) => string[]`**\
+  Split path. For example: `pathToArray('/about-us/story') => ['/about-us', '/story']`.
 
 ## Options
 

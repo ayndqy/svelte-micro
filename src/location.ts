@@ -21,12 +21,12 @@ const parseLocation = (fragment: string): Location => {
 
 const getWindowLocation = (): Location => {
   const { pathname, search, hash } = document.location
-  return parseLocation(pathname + search + hash)
-}
 
-const getHashLocation = (): Location => {
-  const hashFragment = document.location.hash.substring(1)
-  return parseLocation(hashFragment)
+  return {
+    path: pathname,
+    query: search,
+    hash: hash,
+  }
 }
 
 const windowLocation = readable<Location>(getWindowLocation(), (set) => {
@@ -34,6 +34,11 @@ const windowLocation = readable<Location>(getWindowLocation(), (set) => {
   window.addEventListener('popstate', handler)
   return () => window.removeEventListener('popstate', handler)
 })
+
+const getHashLocation = (): Location => {
+  const hashFragment = document.location.hash.substring(1)
+  return parseLocation(hashFragment)
+}
 
 const hashLocation = readable<Location>(getHashLocation(), (set) => {
   const handler = () => set(getHashLocation())
