@@ -12,7 +12,7 @@ const parseLocation = (fragment: string): Location => {
   const queryRegex = /\?([^#]*)?/
   const hashRegex = /#(.*)?/
 
-  const path = fragment.match(pathRegex)?.[1] || ''
+  const path = fragment.match(pathRegex)?.[1] || '/'
   const query = fragment.match(queryRegex)?.[1] ? `?${fragment.match(queryRegex)?.[1]}` : ''
   const hash = fragment.match(hashRegex)?.[1] ? `#${fragment.match(hashRegex)?.[1]}` : ''
 
@@ -29,16 +29,19 @@ const getWindowLocation = (): Location => {
   }
 }
 
+const getHashLocation = (): Location => {
+  let hashFragment = document.location.hash.substring(1)
+
+  if (hashFragment[0] !== '/') hashFragment = '/' + hashFragment
+
+  return parseLocation(hashFragment)
+}
+
 const windowLocation = readable<Location>(getWindowLocation(), (set) => {
   const handler = () => set(getWindowLocation())
   window.addEventListener('popstate', handler)
   return () => window.removeEventListener('popstate', handler)
 })
-
-const getHashLocation = (): Location => {
-  const hashFragment = document.location.hash.substring(1)
-  return parseLocation(hashFragment)
-}
 
 const hashLocation = readable<Location>(getHashLocation(), (set) => {
   const handler = () => set(getHashLocation())

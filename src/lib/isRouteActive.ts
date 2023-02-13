@@ -1,5 +1,5 @@
 import type { RouteParams } from './routeParams'
-import { pathToArray } from './pathToArray'
+import { getPathSegments } from './getPathSegments'
 
 type IsPathActive = (
   globalPath: string,
@@ -9,13 +9,16 @@ type IsPathActive = (
 ) => boolean
 
 const isPathActive: IsPathActive = (globalPath, root, path, depth) => {
+  let globalPathArray = getPathSegments(globalPath).filter((path) => path !== '/')
+  let pathArray = getPathSegments(path).filter((path) => path !== '/')
+
   if (path === '/') {
-    return root || pathToArray(globalPath).length === depth
+    return root || globalPathArray.length === depth
   } else {
     let pathScope = ''
 
-    for (let i = depth - pathToArray(path).length; i < depth; i++) {
-      pathScope = pathScope + pathToArray(globalPath)[i]
+    for (let i = depth - pathArray.length; i < depth; i++) {
+      pathScope = pathScope + globalPathArray[i]
     }
 
     return path === pathScope
@@ -29,6 +32,7 @@ type IsFallbackActive = (
 ) => boolean
 
 const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) => {
+  let globalPathArray = getPathSegments(globalPath).filter((path) => path !== '/')
   let hasActiveRoutes = false
 
   for (let i = 0; i < contextChildren?.length; i++) {
@@ -44,7 +48,7 @@ const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) 
     if (hasActiveRoutes) break
   }
 
-  return pathToArray(globalPath).length >= depth && !hasActiveRoutes
+  return globalPathArray.length >= depth && !hasActiveRoutes
 }
 
 export type IsRouteActive = (

@@ -1,6 +1,6 @@
 # Svelte Micro
 
-Light & reactive router for Svelte
+Light & reactive client-side router for Svelte
 
 ## Table of content
 
@@ -26,7 +26,7 @@ $ npm i svelte-micro
   import { Route, Link } from "svelte-micro"
 </script>
 
-<!-- Root component's path allways should be equal to the '/' -->
+<!-- Root component's path always have to be equal to '/' -->
 <Route>
   <!-- Always will be shown -->
   <nav>
@@ -37,7 +37,7 @@ $ npm i svelte-micro
     <a href="https://github.com/ayndqy/svelte-micro">Github</a>
   </nav>
 
-  <!-- Will be shown only when the $path is equal to the '/' -->
+  <!-- Will be shown only when $path is equal to '/' -->
   <Route path="/">
     <h1>Home page</h1>
     <p>Feel at home!</p>
@@ -46,6 +46,7 @@ $ npm i svelte-micro
   <Route path="/portfolio">
     <h1>Portfolio</h1>
 
+    <!-- Will be shown only when $path is equal to '/portfolio' -->
     <Route path="/">
       <h2>Portfolio main page</h2>
       <Link href="/portfolio/sites">Sites</Link>
@@ -79,10 +80,10 @@ $ npm i svelte-micro
 </Route>
 ```
 
-This code shows the capabilities of the `svelte-micro`.
+This code shows the capabilities of the `svelte-micro`.\
 Spend a minute analyzing this example to understand the approach of the routing system.
 
-For the advanced examples see the [Tips](#tips) section.
+For advanced examples see the [Tips](#tips) section.
 
 ## Route
 
@@ -121,12 +122,12 @@ The top-level (root) component's path always should be equal to the '/'.
 
 ### `<Link />`
 
-The `<Link />` component should be used for the internal application navigation.
+The `<Link />` component should be used for the internal application navigation.\
 It automatically prevents the window from refreshing.
 
-If the [`basePath` option](#options) isn't set to the `null`, the `<Link />` component will append the `basePath` to the `href` attribute.
+If the [`basePath` option](#options) isn't set to `null`, the `<Link />` component will append the `basePath` to the `href` attribute.
 
-If the [`mode` option](#options) is set to the `"hash"`, the `<Link />` component will append a `#` to the beginnig of the `href` attribute.
+If the [`mode` option](#options) is set to `"hash"`, the `<Link />` component will append a `#` to the beginning of the `href` attribute.
 
 ### `linkHandle`
 
@@ -164,20 +165,21 @@ Current hash is {$hash}
 ## Methods and Functions
 
 ```javascript
-import { type Router, type PathToArray, router, pathToArray } from 'svelte-micro'
+import { type Router, type GetPathSegments, router, getPathSegments } from 'svelte-micro'
 ```
 
 - **`router.push(url: string = '/') => void`**\
-  Push new url to the history.
+  Pushes new url to the history.
 
 - **`router.replace(url: string = '/') => void`**\
-  Replace current url in the history.
+  Replaces current url in the history.
 
 - **`router.go(delta: number = '0') => void`**\
-  Move on `delta` steps through the history.
+  Moves on `delta` steps through the history.
 
-- **`pathToArray(path: string) => string[]`**\
-  Split path. For example: `pathToArray('/about-us/story') => ['/about-us', '/story']`.
+- **`getPathSegments(path: string) => string[]`**\
+  Returns path segments.\
+  For example: `getPathSegments('/about-us/story') => ['/about-us', '/story']`.
 
 ## Options
 

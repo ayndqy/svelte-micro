@@ -26,7 +26,7 @@ export const replace: Replace = (url = '/') => {
 
 export type Go = (delta: number) => void
 
-export const go: Go = (delta: number) => {
+export const go: Go = (delta: number = 0) => {
   history.go(delta)
   dispatchLocationChange(get(options).mode)
 }
