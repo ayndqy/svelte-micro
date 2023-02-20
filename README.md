@@ -164,7 +164,7 @@ Current hash is {$hash}
 
 ## Methods and Functions
 
-```javascript
+```typescript
 import { type Router, type GetPathSegments, router, getPathSegments } from 'svelte-micro'
 ```
 
