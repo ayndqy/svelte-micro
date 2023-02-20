@@ -31,7 +31,6 @@ const getWindowLocation = (): Location => {
 
 const getHashLocation = (): Location => {
   let hashFragment = document.location.hash.substring(1)
-
   if (hashFragment[0] !== '/') hashFragment = '/' + hashFragment
 
   return parseLocation(hashFragment)

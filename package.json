@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",

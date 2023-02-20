@@ -111,7 +111,7 @@ The top-level (root) component's path always should be equal to the '/'.
 </script>
 
 <!-- Default props value -->
-<Link href='/'>
+<Link href='/' {...restProps}>
   Home
 </Link>
 

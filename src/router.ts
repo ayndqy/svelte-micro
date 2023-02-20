@@ -1,4 +1,4 @@
-import { type Go, type Push, type Replace, go, push, replace } from './lib/historyActions'
+import { type Go, type Push, type Replace, go, push, replace } from '$lib/historyActions'
 
 export interface Router {
   go: Go

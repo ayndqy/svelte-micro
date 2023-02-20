@@ -14,7 +14,7 @@ export const linkClickHandler: LinkClickHandler = (event) => {
   event.preventDefault()
 }
 
-export type LinkHandle = Action
+export type LinkHandle = Action<HTMLAnchorElement, null>
 
 export const linkHandle: LinkHandle = (node) => {
   node.addEventListener('click', linkClickHandler)

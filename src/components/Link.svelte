@@ -1,13 +1,29 @@
+<script lang="ts" context="module">
+  import type { OptionsList } from '../options'
+
+  type GetFormatedHref = (
+    mode: OptionsList['mode'],
+    basePath: OptionsList['basePath'],
+    href: string
+  ) => string
+
+  const getFormatedHref: GetFormatedHref = (mode, basePath, href) => {
+    const prefix = mode === 'hash' ? '#' : ''
+    return prefix + (basePath ?? '') + href
+  }
+</script>
+
 <script lang="ts">
   import { options } from '../options'
-  import { linkHandle } from '../lib/linkHandle'
+  import { linkHandle } from '$lib/linkHandle'
 
   export let href: string
 
-  $: prefix = $options.mode === 'hash' ? '#' : ''
-  $: formatedHref = prefix + ($options.basePath ?? '') + href
+  interface $$restProps {}
+
+  $: formatedHref = getFormatedHref($options.mode, $options.basePath, href)
 </script>
 
-<a href={formatedHref} use:linkHandle on:click>
+<a href={formatedHref} use:linkHandle on:click {...$$restProps}>
   <slot />
 </a>

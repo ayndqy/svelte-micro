@@ -2,7 +2,7 @@
 
 <script lang="ts" context="module">
   import type { Writable } from 'svelte/store'
-  import type { RouteParams } from '../lib/routeParams'
+  import type { RouteParams } from '$lib/routeParams'
 
   // Route params store type
   type RouteStore = Writable<RouteParams | null>
@@ -18,9 +18,9 @@
   import { writable } from 'svelte/store'
   import { options } from '../options'
   import { path as globalPath } from '../location'
-  import { getRouteDepth } from '../lib/getRouteDepth'
-  import { getPathWithoutBase } from '../lib/getPathWithoutBase'
-  import { isRouteActive } from '../lib/isRouteActive'
+  import { getRouteDepth } from '$lib/getRouteDepth'
+  import { getPathWithoutBase } from '$lib/getPathWithoutBase'
+  import { isRouteActive } from '$lib/isRouteActive'
 
   // Params
   const root: RouteParams['root'] = !hasContext(ROUTE_KEY)
