@@ -99,9 +99,9 @@ For advanced examples see the [Tips](#tips) section.
 />
 ```
 
-The `<Route />` props are reactive.
+The props of `<Route />` are reactive.
 
-The top-level (root) component's path always should be equal to the '/'.
+The path of the top-level (root) component must be equal to `"/"`.
 
 ## Link
 
@@ -125,13 +125,13 @@ The top-level (root) component's path always should be equal to the '/'.
 The `<Link />` component should be used for the internal application navigation.\
 It automatically prevents the window from refreshing.
 
-If the [`basePath` option](#options) isn't set to `null`, the `<Link />` component will append the `basePath` to the `href` attribute.
+If the [`basePath` option](#options) isn't set to `null`, the `<Link />` component will append the `basePath` value to the `href` attribute.
 
 If the [`mode` option](#options) is set to `"hash"`, the `<Link />` component will append a `#` to the beginning of the `href` attribute.
 
 ### `linkHandle`
 
-The `linkHandle` action prevents the window from refreshing when the user clicks this link.
+The `linkHandle` action prevents the window from refreshing when a click event occurs on a handled link.
 
 ## Stores
 
@@ -202,8 +202,8 @@ options.set(defaultOptions)
 - **`basePath`**\
   `null | string`\
   Set the `basePath` for the router.
-  If the `basePath` will be not found in the beginning of the `$path`, the router will work ignoring the `basePath` option. However, if it appears with a `$path` state change, the `basePath` will stop ignoring it.
-  Be aware that if the `mode` option is set to the `"hash"`, the router will try to find the `basePath` in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
+  If a `basePath` value is not found at the beginning of `$path`, the router will continue to operate properly, ignoring the `basePath` option for this state of `$path`.
+  Be aware that if the `mode` option is set to `"hash"`, the router will try to find the `basePath` value in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
 
 ## Tips
 
