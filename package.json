@@ -25,7 +25,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "svelte-kit sync && svelte-package --input ./src --output ./dist --types",
+    "build": "npx svelte-kit sync && npx svelte-package --input ./src --output ./dist --types",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "prepublishOnly": "npm run build"
   },
