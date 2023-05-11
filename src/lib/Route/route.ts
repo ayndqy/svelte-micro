@@ -66,17 +66,16 @@ export const isRouteActive: IsRouteActive = (globalPath, route, contextChildren)
   ) => boolean
 
   const isPathActive: IsPathActive = (globalPath, root, path, depth) => {
-    let globalPathArray = getPathSegments(globalPath).filter((path) => path !== '/')
-    let pathArray = getPathSegments(path).filter((path) => path !== '/')
+    let globalPathSegments = getPathSegments(globalPath).filter((path) => path !== '/')
+    let pathSegments = getPathSegments(path).filter((path) => path !== '/')
 
     if (path === '/') {
-      return root || globalPathArray.length === depth
+      return root || globalPathSegments.length === depth
     } else {
       let pathScope = ''
 
-      for (let i = depth - pathArray.length; i < depth; i++) {
-        pathScope = pathScope + globalPathArray[i]
-      }
+      for (let i = depth - pathSegments.length; i < depth; i++)
+        pathScope = pathScope + globalPathSegments[i]
 
       return path === pathScope
     }

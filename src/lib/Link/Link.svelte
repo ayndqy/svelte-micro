@@ -9,6 +9,7 @@
 
   const getFormatedHref: GetFormatedHref = (mode, basePath, href) => {
     const prefix = mode === 'hash' ? '#' : ''
+
     return prefix + (basePath ?? '') + href
   }
 </script>
@@ -18,7 +19,6 @@
   import { linkHandle } from './linkHandle'
 
   export let href: string
-
   interface $$restProps {}
 
   $: formatedHref = getFormatedHref($options.mode, $options.basePath, href)

@@ -16,7 +16,7 @@
   import { path as globalPath } from '../../location'
   import { getPathWithoutBase } from '../getPathWithoutBase'
   import { getRoute, isRouteActive } from './route'
-  import { type ChildRoutesStore, createChildRoutesStore } from './childRoutesStore'
+  import { type ChildRoutesStore, createChildRoutes } from './childRoutesStore'
 
   const id: Route['id'] = uid++
   const root: Route['root'] = !hasContext(routeContextKey)
@@ -24,7 +24,7 @@
   export let path: Route['path'] = '/'
 
   const route: Writable<Route> = writable()
-  const childRoutes: ChildRoutesStore = createChildRoutesStore()
+  const childRoutes: ChildRoutesStore = createChildRoutes()
   const contextRoute: Writable<Route> = getContext(routeContextKey)
   const contextChildRoutes: ChildRoutesStore = getContext(childRoutesContextKey)
 

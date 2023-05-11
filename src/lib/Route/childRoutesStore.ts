@@ -6,7 +6,7 @@ export type ChildRoutesStore = {
   updateRoute: (id: Route['id'], route: Route | null) => void
 }
 
-export const createChildRoutesStore = (): ChildRoutesStore => {
+export const createChildRoutes = (): ChildRoutesStore => {
   const { subscribe, update } = writable<Route[]>([])
 
   return {
