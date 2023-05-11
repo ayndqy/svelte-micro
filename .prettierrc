@@ -3,6 +3,6 @@
   "semi": false,
   "singleQuote": true,
   "bracketSpacing": true,
-  "printWidth": 108,
+  "printWidth": 100,
   "svelteSortOrder": "scripts-markup-styles"
 }
