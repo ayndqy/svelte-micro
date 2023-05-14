@@ -52,12 +52,12 @@ export const getRoute: GetRoute = (id, root, fallback, path, contextRoute) => {
   return route
 }
 
-export type ChildRoutesStore = {
+export type ChildRoutes = {
   subscribe: Writable<Route[]>['subscribe']
   updateRoute: (id: Route['id'], route: Route | null) => void
 }
 
-export const createChildRoutes = (): ChildRoutesStore => {
+export const createChildRoutes = (): ChildRoutes => {
   const { subscribe, update } = writable<Route[]>([])
 
   return {

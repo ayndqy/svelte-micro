@@ -13,7 +13,7 @@
   import { options } from '../options'
   import { path as globalPath } from '../location'
   import { getPathWithoutBase } from '../getPathWithoutBase'
-  import type { Route, ChildRoutesStore } from './route'
+  import type { Route, ChildRoutes } from './route'
   import { getRoute, createChildRoutes, isRouteActive } from './route'
 
   const id: Route['id'] = uid++
@@ -23,8 +23,8 @@
 
   const route: Writable<Route> = writable()
   const contextRoute: Writable<Route> = getContext(routeContextKey)
-  const childRoutes: ChildRoutesStore = createChildRoutes()
-  const contextChildRoutes: ChildRoutesStore = getContext(childRoutesContextKey)
+  const childRoutes: ChildRoutes = createChildRoutes()
+  const contextChildRoutes: ChildRoutes = getContext(childRoutesContextKey)
 
   $: $route = getRoute(id, root, fallback, path, $contextRoute)
 
