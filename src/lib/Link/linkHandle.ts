@@ -1,5 +1,5 @@
 import type { Action } from 'svelte/action'
-import { push, replace } from '../../router'
+import { push, replace } from '../router'
 
 export type LinkClickHandler = (event: MouseEvent) => void
 

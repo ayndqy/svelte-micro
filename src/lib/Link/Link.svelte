@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import type { OptionsList } from '../../options'
+  import type { OptionsList } from '../options'
 
   type GetFormatedHref = (
     mode: OptionsList['mode'],
@@ -15,7 +15,7 @@
 </script>
 
 <script lang="ts">
-  import { options } from '../../options'
+  import { options } from '../options'
   import { linkHandle } from './linkHandle'
 
   export let href: string

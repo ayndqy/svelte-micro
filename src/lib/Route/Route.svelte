@@ -1,8 +1,6 @@
 <svelte:options immutable={true} />
 
 <script lang="ts" context="module">
-  import type { Route } from './route'
-
   const routeContextKey = {}
   const childRoutesContextKey = {}
 
@@ -12,11 +10,11 @@
 <script lang="ts">
   import { onDestroy, getContext, setContext, hasContext } from 'svelte'
   import { type Writable, writable } from 'svelte/store'
-  import { options } from '../../options'
-  import { path as globalPath } from '../../location'
+  import { options } from '../options'
+  import { path as globalPath } from '../location'
   import { getPathWithoutBase } from '../getPathWithoutBase'
-  import { getRoute, isRouteActive } from './route'
-  import { type ChildRoutesStore, createChildRoutes } from './childRoutesStore'
+  import type { Route, ChildRoutesStore } from './route'
+  import { getRoute, createChildRoutes, isRouteActive } from './route'
 
   const id: Route['id'] = uid++
   const root: Route['root'] = !hasContext(routeContextKey)
@@ -24,8 +22,8 @@
   export let path: Route['path'] = '/'
 
   const route: Writable<Route> = writable()
-  const childRoutes: ChildRoutesStore = createChildRoutes()
   const contextRoute: Writable<Route> = getContext(routeContextKey)
+  const childRoutes: ChildRoutesStore = createChildRoutes()
   const contextChildRoutes: ChildRoutesStore = getContext(childRoutesContextKey)
 
   $: $route = getRoute(id, root, fallback, path, $contextRoute)
