@@ -13,8 +13,7 @@
   import { options } from '../options'
   import { path as globalPath } from '../location'
   import { getPathWithoutBase } from '../getPathWithoutBase'
-  import type { Route, ChildRoutes } from './route'
-  import { getRoute, createChildRoutes, isRouteActive } from './route'
+  import { type Route, type ChildRoutes, getRoute, createChildRoutes, isRouteActive } from './route'
 
   const id: Route['id'] = uid++
   const root: Route['root'] = !hasContext(routeContextKey)
