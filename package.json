@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -26,15 +26,15 @@
   },
   "scripts": {
     "build": "npx svelte-kit sync && npx svelte-package --input ./src --output ./dist --types",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check": "npx svelte-check --tsconfig ./tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "svelte": "^3.59.0||^4.0.0"
+    "svelte": "^3.54.0 || ^4.0.0"
   },
   "devDependencies": {
     "@sveltejs/kit": "^1.20.0",
-    "@sveltejs/package": "^2.0.0",
+    "@sveltejs/package": "^2.1.0",
     "svelte-check": "^3.4.0",
     "tslib": "^2.5.0",
     "typescript": "^5.1.0"
