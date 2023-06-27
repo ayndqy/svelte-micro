@@ -96,15 +96,15 @@ For advanced examples see the [Tips](#tips) section.
 
 | Entity                                                  | Related imports                                                           |
 | ------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [`router` object](#router-object)                       | `import { type Router, router } from 'svelte-micro'`                      |
-| [`options` store](#options-store)                       | `import { type Options, type OptionsStore, options } from 'svelte-micro'` |
-| [`path` store](#path-store)                             | `import { type PathStore, path } from 'svelte-micro'`                     |
-| [`query` store](#query-store)                           | `import { type QueryStore, query } from 'svelte-micro'`                   |
-| [`hash` store](#hash-store)                             | `import { type HashStore, hash } from 'svelte-micro'`                     |
+| [`router` object](#router-object)                       | `import { router, type Router } from 'svelte-micro'`                      |
+| [`options` store](#options-store)                       | `import { options, type OptionsStore, type Options } from 'svelte-micro'` |
+| [`path` store](#path-store)                             | `import { path, type PathStore } from 'svelte-micro'`                     |
+| [`query` store](#query-store)                           | `import { query, type QueryStore } from 'svelte-micro'`                   |
+| [`hash` store](#hash-store)                             | `import { hash, type HashStore } from 'svelte-micro'`                     |
 | [`Route` component](#route-component)                   | `import { Route } from 'svelte-micro'`                                    |
 | [`Link` component](#link-component)                     | `import { Link } from 'svelte-micro'`                                     |
-| [`linkHandle` action](#linkhandle-action)               | `import { type LinkHandle, linkHandle } from 'svelte-micro'`              |
-| [`getPathSegments` function](#getpathsegments-function) | `import { type GetPathSegments, getPathSegments } from 'svelte-micro'`    |
+| [`linkHandle` action](#linkhandle-action)               | `import { linkHandle, type LinkHandle } from 'svelte-micro'`              |
+| [`getPathSegments` function](#getpathsegments-function) | `import { getPathSegments, type GetPathSegments } from 'svelte-micro'`    |
 
 ### `router` object
 
@@ -136,15 +136,15 @@ The `router` object is an object whose methods allow to manipulate history.
 #### Type definition
 
 ```typescript
-type Options = {
-  mode: 'window' | 'hash'
-  basePath: null | string
+type OptionsStore = import('svelte/store').Readable<Options> & {
+  set: (changedOptions: Partial<Options>) => void
 }
 ```
 
 ```typescript
-type OptionsStore = import('svelte/store').Readable<Options> & {
-  set: (changedOptions: Partial<Options>) => void
+type Options = {
+  mode: 'window' | 'hash'
+  basePath: null | string
 }
 ```
 
