@@ -159,7 +159,7 @@ The `options` store provides `subscribe` and `set` methods to access and modify 
 - `$options.basePath`\
   Default: `null`\
   Set the `basePath` for the router.\
-  If a `basePath` value is not found at the beginning of `$path`, the router will continue to operate properly, ignoring the `basePath` option for this state of `$path`.\ Be aware that if `mode` is set to `'hash'`, the router will try to find the `basePath` value in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
+  If a `basePath` value is not found at the beginning of `$path`, the router will continue to operate properly, ignoring the `basePath` option for this state of `$path`. Be aware that if `mode` is set to `'hash'`, the router will try to find the `basePath` value in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
 
 ### `path` store
 
