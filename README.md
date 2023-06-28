@@ -7,7 +7,7 @@ Light & reactive client-side router for Svelte
 - [Installation](#installation)
 - [Example](#example)
 - [API](#api)
-  - [Import reference](#import-reference)
+  - [Imports reference](#imports-reference)
   - [`router` object](#router-object)
   - [`options` store](#options-store)
   - [`path` store](#path-store)
@@ -18,21 +18,25 @@ Light & reactive client-side router for Svelte
   - [`linkHandle` action](#linkhandle-action)
   - [`getPathSegments` function](#getpathsegments-function)
 - [Tips](#tips)
+  - [`path`, `query`, `hash` usage](#path-query-hash-usage)
+  - [Scroll behavior control](#scroll-behavior-control)
+  - [Redirect](#redirect)
+  - [Guarded route](#guarded-route)
 
 ## Installation
 
 ```
-$ npm i svelte-micro
+npm i svelte-micro
 ```
 
 ## Example
 
 ```svelte
 <script>
-  import { Route, Link } from "svelte-micro"
+  import { Route, Link, linkHandle } from "svelte-micro"
 </script>
 
-<!-- Root component's path always have to be equal to '/' -->
+<!-- Root component path always have to be equal to '/' -->
 <Route>
   <!-- Always will be shown -->
   <nav use:linkHandle>
@@ -92,7 +96,7 @@ For advanced examples see the [Tips](#tips) section.
 
 ## API
 
-### Import reference
+### Imports reference
 
 | Entity                                                  | Related imports                                                           |
 | ------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -206,12 +210,12 @@ The store which contains current hash.
   props: { fallback: boolean; path: string; };
   slots: { default: {}; };
 -->
-<Route fallback={false} path="/"> <slot/> </Route>
+<Route fallback={false} path="/"> <slot /> </Route>
 ```
 
 #### Description
 
-The `Route` component defines a route. The props of `Route` are reactive.
+The `Route` component defines a route. The props of `Route` are reactive. A nested `Route` component works in context of its parental `Route` component, so you don't need to define its full `path`.
 
 - `fallback`\
   Default: `{false}`
@@ -287,23 +291,7 @@ For example: `getPathSegments('/about-us/story') => ['/about-us', '/story']`.
 
 ## Tips
 
-### Scroll behavior control
-
-```javascript
-import { path } from 'svelte-micro'
-
-// Disable browser scroll behavior control
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual'
-}
-
-// On path change reset scroll position
-path.subscribe(() => window.scrollTo(0, 0))
-```
-
-By default `svelte-micro` doesn't control scroll behavior, but it's easy to do on your own.
-
-### `path`, `query` & `hash` stores usage
+### `path`, `query`, `hash` usage
 
 ```svelte
 <script>
@@ -322,10 +310,42 @@ By default `svelte-micro` doesn't control scroll behavior, but it's easy to do o
 
 <!-- Hash usage example -->
 {#if $hash === '#modal'}
-  <div class="modal">
-    Hello from modal!
-  </div>
+  <div class="modal">Hello from modal!</div>
 {/if}
+```
+
+### Scroll behavior control
+
+```javascript
+import { path } from 'svelte-micro'
+
+// Disable browser scroll behavior control
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual'
+}
+
+// On path change reset scroll position
+path.subscribe(() => window.scrollTo(0, 0))
+```
+
+By default `svelte-micro` doesn't control scroll behavior, but it's easy to do on your own.
+
+### Redirect
+
+```svelte
+<script>
+  import { router, Route } from 'svelte-micro'
+</script>
+
+<Route>
+  <Route path="/redirect">
+    {router.replace('/redirect-target')}
+  </Route>
+
+  <Route path="/redirect-target">
+    <h1>You have been redirected</h1>
+  </Route>
+</Route>
 ```
 
 ### Guarded route
