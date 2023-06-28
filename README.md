@@ -6,41 +6,50 @@ Light & reactive client-side router for Svelte
 
 - [Installation](#installation)
 - [Example](#example)
-- [Route](#route)
-- [Link](#link)
-- [Stores](#stores)
-- [Methods and Functions](#methods-and-functions)
-- [Options](#options)
+- [API](#api)
+  - [Imports reference](#imports-reference)
+  - [`router` object](#router-object)
+  - [`options` store](#options-store)
+  - [`path` store](#path-store)
+  - [`query` store](#query-store)
+  - [`hash` store](#hash-store)
+  - [`Route` component](#route-component)
+  - [`Link` component](#link-component)
+  - [`linkHandle` action](#linkhandle-action)
+  - [`getPathSegments` function](#getpathsegments-function)
 - [Tips](#tips)
+  - [`path`, `query`, `hash` usage](#path-query-hash-usage)
+  - [Scroll behavior control](#scroll-behavior-control)
+  - [Redirect](#redirect)
+  - [Guarded route](#guarded-route)
 
 ## Installation
 
 ```
-$ npm i svelte-micro
+npm i svelte-micro
 ```
 
 ## Example
 
 ```svelte
 <script>
-  import { Route, Link } from "svelte-micro"
+  import { Route, Link, linkHandle } from "svelte-micro"
 </script>
 
-<!-- Root component's path always have to be equal to '/' -->
+<!-- Root component path always have to be equal to '/' -->
 <Route>
   <!-- Always will be shown -->
-  <nav>
-    <Link href="/">Home</Link>
-    <Link href="/portfolio">Portfolio</Link>
-    <Link href="/about-us/story">Our story</Link>
-    <!-- External link -->
+  <nav use:linkHandle>
+    <a href="/">Home</a>
+    <a href="/portfolio">Portfolio</a>
+    <a href="/about-us/story">Our story</a>
     <a href="https://github.com/ayndqy/svelte-micro">Github</a>
   </nav>
 
   <!-- Will be shown only when $path is equal to '/' -->
   <Route path="/">
     <h1>Home page</h1>
-    <p>Feel at home!</p>
+    <p>Make yourself at home.</p>
   </Route>
 
   <Route path="/portfolio">
@@ -80,132 +89,230 @@ $ npm i svelte-micro
 </Route>
 ```
 
-This code shows the capabilities of the `svelte-micro`.\
-Spend a minute analyzing this example to understand the approach of the routing system.
+This code shows the capabilities of the `svelte-micro` routing system.\
+Spend a minute analyzing this example to understand the approach.
 
 For advanced examples see the [Tips](#tips) section.
 
-## Route
+## API
+
+### Imports reference
+
+| Entity                                                  | Related imports                                                           |
+| ------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [`router` object](#router-object)                       | `import { router, type Router } from 'svelte-micro'`                      |
+| [`options` store](#options-store)                       | `import { options, type OptionsStore, type Options } from 'svelte-micro'` |
+| [`path` store](#path-store)                             | `import { path, type PathStore } from 'svelte-micro'`                     |
+| [`query` store](#query-store)                           | `import { query, type QueryStore } from 'svelte-micro'`                   |
+| [`hash` store](#hash-store)                             | `import { hash, type HashStore } from 'svelte-micro'`                     |
+| [`Route` component](#route-component)                   | `import { Route } from 'svelte-micro'`                                    |
+| [`Link` component](#link-component)                     | `import { Link } from 'svelte-micro'`                                     |
+| [`linkHandle` action](#linkhandle-action)               | `import { linkHandle, type LinkHandle } from 'svelte-micro'`              |
+| [`getPathSegments` function](#getpathsegments-function) | `import { getPathSegments, type GetPathSegments } from 'svelte-micro'`    |
+
+### `router` object
+
+#### Type definition
+
+```typescript
+type Router = {
+  go: (delta?: number) => void
+  push: (url?: string | URL | null, state?: any) => void
+  replace: (url?: string | URL | null, state?: any) => void
+}
+```
+
+#### Description
+
+The `router` object is an object whose methods allow to manipulate history.
+
+- `router.go`\
+  Move on `delta` steps through the history.
+
+- `router.push`\
+  Push new `url` and [`state`](https://developer.mozilla.org/en-US/docs/Web/API/History/state) to the history.
+
+- `router.replace`\
+  Replace current `url` and [`state`](https://developer.mozilla.org/en-US/docs/Web/API/History/state) in the history.
+
+### `options` store
+
+#### Type definition
+
+```typescript
+type OptionsStore = import('svelte/store').Readable<Options> & {
+  set: (changedOptions: Partial<Options>) => void
+}
+```
+
+```typescript
+type Options = {
+  mode: 'window' | 'hash'
+  basePath: null | string
+}
+```
+
+#### Description
+
+The `options` store provides `subscribe` and `set` methods to access and modify router options.
+
+- `$options.mode`\
+  Default: `'window'`\
+  Set the `mode` for the router.
+
+- `$options.basePath`\
+  Default: `null`\
+  Set the `basePath` for the router.\
+  If a `basePath` value is not found at the beginning of `$path`, the router will continue to operate properly, ignoring the `basePath` option for this state of `$path`. Be aware that if `mode` is set to `'hash'`, the router will try to find the `basePath` value in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
+
+### `path` store
+
+#### Type definition
+
+```typescript
+type PathStore = import('svelte/store').Readable<string>
+```
+
+#### Description
+
+The store which contains current path.
+
+### `query` store
+
+#### Type definition
+
+```typescript
+type QueryStore = import('svelte/store').Readable<string>
+```
+
+#### Description
+
+The store which contains current query.
+
+### `hash` store
+
+#### Type definition
+
+```typescript
+type HashStore = import('svelte/store').Readable<string>
+```
+
+#### Description
+
+The store which contains current hash.
+
+### `Route` component
+
+#### Type definition
+
+```svelte
+<!--
+  props: { fallback: boolean; path: string; };
+  slots: { default: {}; };
+-->
+<Route fallback={false} path="/"> <slot /> </Route>
+```
+
+#### Description
+
+The `Route` component defines a route. The props of `Route` are reactive. A nested `Route` component works in context of its parental `Route` component, so you don't need to define its full `path`.
+
+- `fallback`\
+  Default: `{false}`
+  The property which defines if the route is fallback. A fallback route is active when there is no active routes on its depth.
+
+- `path`\
+  Default: `'/'`
+  The property which defines route path. `path` must start from `'/'`.
+
+The top-level (root) `Route` must have `path` equal to `'/'` and `fallback` equal to `false`.\
+These values are set by default, so you can leave them unchanged (see [Example](#example) section).
+
+### `Link` component
+
+#### Type definition
+
+```svelte
+<!--
+  props: { href: string; [x: string]: any; };
+  slots: { default: {}; };
+-->
+<Link href="/" {...restProps}> <slot /> </Link>
+```
+
+#### Description
+
+The `<Link />` component is built on top of [`linkHandle`](#linkhandle-action) and should be used for the internal application navigation.\
+It automatically prevents the window from refreshing.
+
+- `href`\
+  Default: `'/'`
+  The property which defines link href.
+
+- `{...restProps}`\
+  Any other property is attached on the inner `a` element.
+
+If the [`basePath` option](#options-store) isn't set to `null`, the `<Link />` component will append the `basePath` value to the `href` attribute.\
+If the [`mode` option](#options-store) is set to `"hash"`, the `<Link />` component will append a `#` to the beginning of the `href` attribute.
+
+### `linkHandle` action
+
+#### Type definition
+
+```typescript
+type LinkHandle = import('svelte/action').Action<HTMLElement>
+```
+
+#### Description
+
+The `linkHandle` action prevents window from refreshing when the click event occurs on a handled `a[href]` element.\
+`linkHandle` can be applied on a parental element to handle nested `a[href]` elements.
+
+`linkHandle` ignores an `a[href]` element if:
+
+- `a[href]` has `data-handle-ignore` attribute
+- `a[href]` has `target` attribute which isn't equal to `'_self'`
+- `a[href]` has external href (`new URL(href).origin !== document.location.origin`)
+- `(event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) === true` during the click event
+
+### `getPathSegments` function
+
+#### Type definition
+
+```typescript
+export type GetPathSegments = (path: string) => string[]
+```
+
+#### Description
+
+The `getPathSegments` function divides `path` into segments.
+
+For example: `getPathSegments('/about-us/story') => ['/about-us', '/story']`.
+
+## Tips
+
+### `path`, `query`, `hash` usage
 
 ```svelte
 <script>
-  import { Route } from 'svelte-micro'
+  import { path, query, hash } from 'svelte-micro'
+
+  // For example current location equals to '/somepath?text=Hello#modal'
+  // $path  === '/somepath'
+  // $query === '?text=Hello'
+  // $hash  === '#modal'
+
+  $: text = new URLSearchParams($query)?.get('text') ?? 'Fallback value'
 </script>
 
-<!-- Default props value -->
-<Route
-  fallback={false}
-  path="/"
-/>
+<!-- Query usage example -->
+{text}
+
+<!-- Hash usage example -->
+{#if $hash === '#modal'}
+  <div class="modal">Hello from modal!</div>
+{/if}
 ```
-
-The props of `<Route />` are reactive.
-
-The path of the top-level (root) component must be equal to `"/"`.
-
-## Link
-
-```svelte
-<script lang="ts">
-  import { type LinkHandle, Link, linkHandle } from 'svelte-micro'
-</script>
-
-<!-- Default props value -->
-<Link href='/' {...restProps}>
-  Home
-</Link>
-
-<a href="/" use:linkHandle>
-  Home
-</a>
-```
-
-### `<Link />`
-
-The `<Link />` component should be used for the internal application navigation.\
-It automatically prevents the window from refreshing.
-
-If the [`basePath` option](#options) isn't set to `null`, the `<Link />` component will append the `basePath` value to the `href` attribute.
-
-If the [`mode` option](#options) is set to `"hash"`, the `<Link />` component will append a `#` to the beginning of the `href` attribute.
-
-### `linkHandle`
-
-The `linkHandle` action prevents the window from refreshing when a click event occurs on a handled link.
-
-## Stores
-
-```svelte
-<script lang="ts">
-  import { type Path, type Query, type Hash, path, query, hash } from 'svelte-micro'
-
-  // For example the location equals to "/portfolio/work?id=3#gallery"
-  // $path == "/portfolio/work"
-  // $query == "?id=3"
-  // $hash == "#gallery"
-</script>
-
-Current path is {$path}
-Current query is {$query}
-Current hash is {$hash}
-```
-
-- **`$path`**\
-  `Readable<string>`\
-  The store which contains current path fragment.
-
-- **`$query`**\
-  `Readable<string>`\
-  The store which contains current query fragment.
-
-- **`$hash`**\
-  `Readable<string>`\
-  The store which contains current hash fragment.
-
-## Methods and Functions
-
-```typescript
-import { type Router, type GetPathSegments, router, getPathSegments } from 'svelte-micro'
-```
-
-- **`router.push(url: string = '/') => void`**\
-  Pushes new url to the history.
-
-- **`router.replace(url: string = '/') => void`**\
-  Replaces current url in the history.
-
-- **`router.go(delta: number = '0') => void`**\
-  Moves on `delta` steps through the history.
-
-- **`getPathSegments(path: string) => string[]`**\
-  Returns path segments.\
-  For example: `getPathSegments('/about-us/story') => ['/about-us', '/story']`.
-
-## Options
-
-```typescript
-import { type Options, type OptionsList, options } from 'svelte-micro'
-
-// Default values
-const defaultOptions: OptionsList = {
-  mode: 'window',
-  basePath: null,
-}
-
-options.set(defaultOptions)
-```
-
-- **`mode`**\
-  `'window' | 'hash'`\
-  Set the `mode` for the router.
-
-- **`basePath`**\
-  `null | string`\
-  Set the `basePath` for the router.
-  If a `basePath` value is not found at the beginning of `$path`, the router will continue to operate properly, ignoring the `basePath` option for this state of `$path`.
-  Be aware that if the `mode` option is set to `"hash"`, the router will try to find the `basePath` value in the hash location fragment, since the hash location fragment is already separated from the path location fragment.
-
-## Tips
 
 ### Scroll behavior control
 
@@ -221,52 +328,45 @@ if ('scrollRestoration' in history) {
 path.subscribe(() => window.scrollTo(0, 0))
 ```
 
-By default svelte-micro doesn't control scroll behavior, but it's easy to do on your own.
+By default `svelte-micro` doesn't control scroll behavior, but it's easy to do on your own.
 
-### Stores usage
+### Redirect
 
 ```svelte
 <script>
-  import { path, query, hash } from 'svelte-micro'
-
-  // For example the location equals to '/somepath?text=Hello#modal'
-  // $path = '/somepath'
-  // $query = '?text=Hello'
-  // $hash = '#modal'
-
-  // If you want to get an object with data from the query
-  $: queryData = Object.fromEntries(new URLSearchParams($query).entries())
+  import { router, Route } from 'svelte-micro'
 </script>
 
-<!-- Query usage example -->
-{queryData?.text}
+<Route>
+  <Route path="/redirect">
+    {router.replace('/redirect-target')}
+  </Route>
 
-<!-- Hash usage example -->
-{#if $hash === '#modal'}
-  <div class="modal">
-    Hello from modal!
-  </div>
-{/if}
+  <Route path="/redirect-target">
+    <h1>You have been redirected</h1>
+  </Route>
+</Route>
 ```
 
 ### Guarded route
 
 ```svelte
 <script>
-  import { Route, router } from 'svelte-micro'
+  import { Route } from 'svelte-micro'
 
-  let isUserAuthenticated = true
+  let isUserAuthenticated = false
+  const toggleAuth = () => (isUserAuthenticated = !isUserAuthenticated)
 </script>
 
 <Route>
+  <Route path="/auth">
+    <button on:click={toggleAuth}>{isUserAuthenticated ? "Log out" : "Log in"}</button>
+  </Route>
+
   {#if isUserAuthenticated}
     <Route path="/profile">
       <h1>Welcome!</h1>
-      <button on:click={() => (isUserAuthenticated = false)}>Log out</button>
-    </Route>
-  {:else}
-    <Route path="/profile">
-      {router.replace('/auth')}
+      <button on:click={toggleAuth}>Log out</button>
     </Route>
   {/if}
 </Route>

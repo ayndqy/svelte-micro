@@ -1,4 +1,4 @@
-import { type Writable, writable } from 'svelte/store'
+import { writable } from 'svelte/store'
 import { getPathSegments } from '../getPathSegments'
 
 export type Route = {
@@ -52,8 +52,7 @@ export const getRoute: GetRoute = (id, root, fallback, path, contextRoute) => {
   return route
 }
 
-export type ChildRoutes = {
-  subscribe: Writable<Route[]>['subscribe']
+export type ChildRoutes = import('svelte/store').Readable<Route[]> & {
   updateRoute: (id: Route['id'], route: Route | null) => void
 }
 
@@ -61,7 +60,7 @@ export const createChildRoutes = (): ChildRoutes => {
   const { subscribe, update } = writable<Route[]>([])
 
   return {
-    subscribe: subscribe,
+    subscribe,
 
     updateRoute: (id, route) => {
       update((childRoutes) => {
@@ -72,11 +71,7 @@ export const createChildRoutes = (): ChildRoutes => {
   }
 }
 
-export type IsRouteActive = (
-  globalPath: string,
-  route: Route,
-  contextChildren: (Route | null)[]
-) => boolean
+export type IsRouteActive = (globalPath: string, route: Route, contextChildren: Route[]) => boolean
 
 export const isRouteActive: IsRouteActive = (globalPath, route, contextChildren) => {
   type IsPathActive = (
@@ -105,7 +100,7 @@ export const isRouteActive: IsRouteActive = (globalPath, route, contextChildren)
   type IsFallbackActive = (
     globalPath: string,
     depth: Route['depth'],
-    contextChildren: (Route | null)[]
+    contextChildren: Route[]
   ) => boolean
 
   const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) => {

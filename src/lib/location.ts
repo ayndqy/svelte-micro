@@ -1,7 +1,8 @@
-import { type Readable, readable, derived } from 'svelte/store'
-import { type Options, options } from './options'
+import { readable, derived } from 'svelte/store'
+import { options } from './options'
+import { getPathWithoutBase } from './getPathWithoutBase'
 
-interface Location {
+type Location = {
   path: string
   query: string
   hash: string
@@ -48,7 +49,7 @@ const hashLocation = readable<Location>(getHashLocation(), (set) => {
   return () => window.removeEventListener('hashchange', handler)
 })
 
-const selectedLocation = derived<[Options, ...Readable<Location>[]], Location>(
+const selectedLocation: import('svelte/store').Readable<Location> = derived(
   [options, windowLocation, hashLocation],
   ([$options, $windowLocation, $hashLocation], set) => {
     if ($options.mode === 'window') set($windowLocation)
@@ -56,10 +57,14 @@ const selectedLocation = derived<[Options, ...Readable<Location>[]], Location>(
   }
 )
 
-export type Path = Readable<Location['path']>
-export type Query = Readable<Location['query']>
-export type Hash = Readable<Location['hash']>
+export type PathStore = import('svelte/store').Readable<string>
+export type QueryStore = import('svelte/store').Readable<string>
+export type HashStore = import('svelte/store').Readable<string>
 
-export const path: Path = derived(selectedLocation, ($location) => $location.path)
-export const query: Query = derived(selectedLocation, ($location) => $location.query)
-export const hash: Hash = derived(selectedLocation, ($location) => $location.hash)
+export const path: PathStore = derived(selectedLocation, ($location) => $location.path)
+export const query: QueryStore = derived(selectedLocation, ($location) => $location.query)
+export const hash: HashStore = derived(selectedLocation, ($location) => $location.hash)
+
+export const pathWithoutBase: PathStore = derived([options, path], ([$options, $path]) =>
+  getPathWithoutBase($path, $options.basePath)
+)

@@ -1,7 +1,7 @@
 import { get } from 'svelte/store'
-import { type OptionsList, options } from './options'
+import { type Options, options } from './options'
 
-const dispatchLocationChange = (mode: OptionsList['mode']) => {
+const dispatchLocationChange = (mode: Options['mode']) => {
   let type: string = 'popstate'
 
   if (mode === 'window') type = 'popstate'
@@ -10,31 +10,25 @@ const dispatchLocationChange = (mode: OptionsList['mode']) => {
   window.dispatchEvent(new Event(type))
 }
 
-export type Push = (url: string) => void
-
-export const push: Push = (url = '/') => {
-  history.pushState({}, '', url)
-  dispatchLocationChange(get(options).mode)
+export type Router = {
+  go: (delta?: number) => void
+  push: (url?: string | URL | null, state?: any) => void
+  replace: (url?: string | URL | null, state?: any) => void
 }
 
-export type Replace = (url: string) => void
-
-export const replace: Replace = (url = '/') => {
-  history.replaceState({}, '', url)
-  dispatchLocationChange(get(options).mode)
-}
-
-export type Go = (delta: number) => void
-
-export const go: Go = (delta: number = 0) => {
+export const go: Router['go'] = (delta: number = 0) => {
   history.go(delta)
   dispatchLocationChange(get(options).mode)
 }
 
-export interface Router {
-  go: Go
-  push: Push
-  replace: Replace
+export const push: Router['push'] = (url, state = null) => {
+  history.pushState(state, '', url)
+  dispatchLocationChange(get(options).mode)
+}
+
+export const replace: Router['replace'] = (url, state = null) => {
+  history.replaceState(state, '', url)
+  dispatchLocationChange(get(options).mode)
 }
 
 export const router: Router = {

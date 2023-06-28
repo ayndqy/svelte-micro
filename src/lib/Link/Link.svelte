@@ -1,15 +1,16 @@
+<svelte:options immutable={true} />
+
 <script lang="ts" context="module">
-  import type { OptionsList } from '../options'
+  import type { Options } from '../options'
 
   type GetFormatedHref = (
-    mode: OptionsList['mode'],
-    basePath: OptionsList['basePath'],
+    mode: Options['mode'],
+    basePath: Options['basePath'],
     href: string
   ) => string
 
   const getFormatedHref: GetFormatedHref = (mode, basePath, href) => {
     const prefix = mode === 'hash' ? '#' : ''
-
     return prefix + (basePath ?? '') + href
   }
 </script>

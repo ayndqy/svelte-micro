@@ -1,23 +1,24 @@
-import { type Readable, writable } from 'svelte/store'
+import { writable } from 'svelte/store'
 
-export interface OptionsList {
+export type Options = {
   mode: 'window' | 'hash'
   basePath: null | string
 }
 
-export interface Options {
-  subscribe: Readable<OptionsList>['subscribe']
-  set: (changedOptions: Partial<OptionsList>) => void
+export type OptionsStore = import('svelte/store').Readable<Options> & {
+  set: (changedOptions: Partial<Options>) => void
 }
 
-const createOptions = (initialValues: OptionsList): Options => {
-  const { subscribe, update } = writable<OptionsList>(initialValues)
+const createOptions = (initialValues: Options): OptionsStore => {
+  const { subscribe, update } = writable<Options>(initialValues)
 
-  const set: Options['set'] = (changedOptions = {}) => {
-    update((options) => Object.assign(options, changedOptions))
+  return {
+    subscribe,
+
+    set: (changedOptions = {}) => {
+      update((options) => Object.assign(options, changedOptions))
+    },
   }
-
-  return { subscribe, set }
 }
 
 export const options = createOptions({

@@ -1,20 +1,25 @@
-import type { Action } from 'svelte/action'
 import { push, replace } from '../router'
 
 export type LinkClickHandler = (event: MouseEvent) => void
 
 export const linkClickHandler: LinkClickHandler = (event) => {
-  const target = (event.target as HTMLElement).closest('a[href]')
-  const href = target?.getAttribute('href') ?? ''
-  const isTargetInvalid = target?.nodeName !== 'A'
+  const target = (event.target as HTMLElement)?.closest('a[href]') as HTMLAnchorElement
+  const href = target?.href
 
-  if (isTargetInvalid) return true
+  if (target === null || href === null) return true
 
-  href === document.location.pathname ? replace(href) : push(href)
+  const isIgnored = ['', 'true'].includes(target.getAttribute('data-handle-ignore') ?? 'false')
+  const isTargetNonSelf = (target.getAttribute('target') ?? '_self') !== '_self'
+  const isKeyPressed = event.metaKey || event.ctrlKey || event.altKey || event.shiftKey
+  const isExternalOrigin = new URL(href).origin !== document.location.origin
+
+  if (isIgnored || isTargetNonSelf || isKeyPressed || isExternalOrigin) return true
+
+  href === document.location.href ? replace(href) : push(href)
   event.preventDefault()
 }
 
-export type LinkHandle = Action<HTMLAnchorElement, null>
+export type LinkHandle = import('svelte/action').Action<HTMLElement>
 
 export const linkHandle: LinkHandle = (node) => {
   node.addEventListener('click', linkClickHandler)
