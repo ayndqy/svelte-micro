@@ -5,7 +5,8 @@ export type Options = {
   basePath: null | string
 }
 
-export type OptionsStore = import('svelte/store').Readable<Options> & {
+export type OptionsStore = {
+  subscribe: import('svelte/store').Readable<Options>['subscribe']
   set: (changedOptions: Partial<Options>) => void
 }
 

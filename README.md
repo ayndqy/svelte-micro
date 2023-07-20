@@ -102,9 +102,9 @@ For advanced examples see the [Tips](#tips) section.
 | ------------------------------------------------------- | ------------------------------------------------------------------------- |
 | [`router` object](#router-object)                       | `import { router, type Router } from 'svelte-micro'`                      |
 | [`options` store](#options-store)                       | `import { options, type OptionsStore, type Options } from 'svelte-micro'` |
-| [`path` store](#path-store)                             | `import { path, type PathStore } from 'svelte-micro'`                     |
-| [`query` store](#query-store)                           | `import { query, type QueryStore } from 'svelte-micro'`                   |
-| [`hash` store](#hash-store)                             | `import { hash, type HashStore } from 'svelte-micro'`                     |
+| [`path` store](#path-store)                             | `import { path, type PathStore, type Path } from 'svelte-micro'`          |
+| [`query` store](#query-store)                           | `import { query, type QueryStore, type Query } from 'svelte-micro'`       |
+| [`hash` store](#hash-store)                             | `import { hash, type HashStore, type Hash } from 'svelte-micro'`          |
 | [`Route` component](#route-component)                   | `import { Route } from 'svelte-micro'`                                    |
 | [`Link` component](#link-component)                     | `import { Link } from 'svelte-micro'`                                     |
 | [`linkHandle` action](#linkhandle-action)               | `import { linkHandle, type LinkHandle } from 'svelte-micro'`              |
@@ -140,7 +140,8 @@ The `router` object is an object whose methods allow to manipulate history.
 #### Type definition
 
 ```typescript
-type OptionsStore = import('svelte/store').Readable<Options> & {
+type OptionsStore = {
+  subscribe: import('svelte/store').Readable<Options>['subscribe']
   set: (changedOptions: Partial<Options>) => void
 }
 ```
@@ -170,7 +171,11 @@ The `options` store provides `subscribe` and `set` methods to access and modify 
 #### Type definition
 
 ```typescript
-type PathStore = import('svelte/store').Readable<string>
+type Path = string
+```
+
+```typescript
+type PathStore = import('svelte/store').Readable<Path>
 ```
 
 #### Description
@@ -182,7 +187,11 @@ The store which contains current path.
 #### Type definition
 
 ```typescript
-type QueryStore = import('svelte/store').Readable<string>
+type Query = string
+```
+
+```typescript
+type QueryStore = import('svelte/store').Readable<Query>
 ```
 
 #### Description
@@ -194,7 +203,11 @@ The store which contains current query.
 #### Type definition
 
 ```typescript
-type HashStore = import('svelte/store').Readable<string>
+type Hash = string
+```
+
+```typescript
+type HashStore = import('svelte/store').Readable<Hash>
 ```
 
 #### Description

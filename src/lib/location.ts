@@ -1,39 +1,39 @@
 import { readable, derived } from 'svelte/store'
 import { options } from './options'
-import { getPathWithoutBase } from './getPathWithoutBase'
+import { getPathWithoutBase } from './utils/getPathWithoutBase'
+
+export type Path = string
+export type Query = string
+export type Hash = string
 
 type Location = {
-  path: string
-  query: string
-  hash: string
+  path: Path
+  query: Query
+  hash: Hash
 }
 
-const parseLocation = (fragment: string): Location => {
-  const pathRegex = /^(\/[^?#]*)?/
-  const queryRegex = /\?([^#]*)?/
-  const hashRegex = /#(.*)?/
+type ParseLocation = (fragment: string) => Location
 
-  const path = fragment.match(pathRegex)?.[1] || '/'
-  const query = fragment.match(queryRegex)?.[1] ? `?${fragment.match(queryRegex)?.[1]}` : ''
-  const hash = fragment.match(hashRegex)?.[1] ? `#${fragment.match(hashRegex)?.[1]}` : ''
+const parseLocation: ParseLocation = (fragment) => {
+  const pathMatch = fragment.match(/^(\/[^?#]*)?/)
+  const queryMatch = fragment.match(/\?([^#]*)?/)
+  const hashMatch = fragment.match(/#(.*)?/)
 
-  return { path, query, hash }
+  return {
+    path: pathMatch?.[1] || '/',
+    query: queryMatch?.[1] ? `?${queryMatch?.[1]}` : '',
+    hash: hashMatch?.[1] ? `#${hashMatch?.[1]}` : '',
+  }
 }
 
 const getWindowLocation = (): Location => {
   const { pathname, search, hash } = document.location
-
-  return {
-    path: pathname,
-    query: search,
-    hash: hash,
-  }
+  return { path: pathname, query: search, hash: hash }
 }
 
 const getHashLocation = (): Location => {
   let hashFragment = document.location.hash.substring(1)
   if (hashFragment[0] !== '/') hashFragment = '/' + hashFragment
-
   return parseLocation(hashFragment)
 }
 
@@ -57,9 +57,9 @@ const selectedLocation: import('svelte/store').Readable<Location> = derived(
   }
 )
 
-export type PathStore = import('svelte/store').Readable<string>
-export type QueryStore = import('svelte/store').Readable<string>
-export type HashStore = import('svelte/store').Readable<string>
+export type PathStore = import('svelte/store').Readable<Path>
+export type QueryStore = import('svelte/store').Readable<Query>
+export type HashStore = import('svelte/store').Readable<Hash>
 
 export const path: PathStore = derived(selectedLocation, ($location) => $location.path)
 export const query: QueryStore = derived(selectedLocation, ($location) => $location.query)

@@ -17,7 +17,7 @@
 
 <script lang="ts">
   import { options } from '../options'
-  import { linkHandle } from './linkHandle'
+  import { linkHandle } from '../utils/linkHandle'
 
   export let href: string
   interface $$restProps {}
