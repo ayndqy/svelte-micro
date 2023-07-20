@@ -1,4 +1,4 @@
-import { push, replace } from '../router'
+import { router } from '../router'
 
 export type LinkClickHandler = (event: MouseEvent) => void
 
@@ -15,7 +15,7 @@ export const linkClickHandler: LinkClickHandler = (event) => {
 
   if (isIgnored || isTargetNonSelf || isKeyPressed || isExternalOrigin) return true
 
-  href === document.location.href ? replace(href) : push(href)
+  href === document.location.href ? router.replace(href) : router.push(href)
   event.preventDefault()
 }
 
