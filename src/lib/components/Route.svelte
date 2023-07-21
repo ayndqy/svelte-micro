@@ -24,16 +24,12 @@
   ) => Route
 
   const getRoute: GetRoute = (id, root, fallback, path, contextRoute) => {
-    type GetRouteDepth = (fallback: boolean, path: string, contextDepth?: number) => number
-
-    const getRouteDepth: GetRouteDepth = (fallback, path, contextDepth = 0) => {
+    const getRouteDepth = (fallback: boolean, path: string, contextDepth?: number) => {
       const pathLength = getPathSegments(path).filter((path) => path !== '/').length
       return (contextDepth ?? 0) + (fallback ? 1 : pathLength)
     }
 
-    type ValidateRoute = (route: Route, contextRoute: Route | null) => void
-
-    const validateRoute: ValidateRoute = (route, contextRoute) => {
+    const validateRoute = (route: Route, contextRoute: Route | null) => {
       const messages = {
         invalidPath: `<Route path="${route?.path}" /> has invalid path. Path must start with '/'`,
         fallbackOutsideRoot: `<Route fallback /> cannot be outside root <Route />`,
@@ -69,13 +65,11 @@
     return {
       subscribe,
 
-      update: (route) => {
-        update((childRoutes) => [...childRoutes.filter((child) => route.id !== child.id), route])
-      },
+      update: (route) =>
+        update((childRoutes) => [...childRoutes.filter((child) => route.id !== child.id), route]),
 
-      remove: (route) => {
-        update((childRoutes) => childRoutes.filter((child) => route.id !== child.id))
-      },
+      remove: (route) =>
+        update((childRoutes) => childRoutes.filter((child) => route.id !== child.id)),
     }
   }
 
@@ -110,22 +104,22 @@
 
     const isFallbackActive: IsFallbackActive = (globalPath, depth, contextChildren) => {
       let globalPathSegments = getPathSegments(globalPath).filter((path) => path !== '/')
-      let hasActiveRoutes = false
+      let hasActiveSiblingRoutes = false
 
       for (let i = 0; i < contextChildren?.length; i++) {
-        if (contextChildren[i] === null || contextChildren[i]?.fallback) continue
+        if (contextChildren[i]?.fallback) continue
 
-        hasActiveRoutes = isPathActive(
+        hasActiveSiblingRoutes = isPathActive(
           globalPath,
           contextChildren[i]?.root ?? false,
           contextChildren[i]?.path ?? '',
           contextChildren[i]?.depth ?? 0
         )
 
-        if (hasActiveRoutes) break
+        if (hasActiveSiblingRoutes) break
       }
 
-      return globalPathSegments.length >= depth && !hasActiveRoutes
+      return globalPathSegments.length >= depth && !hasActiveSiblingRoutes
     }
 
     const { root, fallback, path, depth } = route
