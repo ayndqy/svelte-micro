@@ -2,6 +2,7 @@
 
 <script lang="ts" context="module">
   import { writable } from 'svelte/store'
+  import { createIdIssuer } from '../utils/createIdIssuer'
   import { getPathSegments } from '../utils/getPathSegments'
 
   type Route = {
@@ -91,17 +92,14 @@
     const isPathActive: IsPathActive = (globalPath, root, path, depth) => {
       let globalPathSegments = getPathSegments(globalPath).filter((path) => path !== '/')
       let pathSegments = getPathSegments(path).filter((path) => path !== '/')
+      let pathScope = ''
 
-      if (path === '/') {
-        return root || globalPathSegments.length === depth
-      } else {
-        let pathScope = ''
+      if (path === '/') return root || globalPathSegments.length === depth
 
-        for (let i = depth - pathSegments.length; i < depth; i++)
-          pathScope = pathScope + globalPathSegments[i]
+      for (let i = depth - pathSegments.length; i < depth; i++)
+        pathScope = pathScope + globalPathSegments[i]
 
-        return path === pathScope
-      }
+      return path === pathScope
     }
 
     type IsFallbackActive = (
@@ -137,12 +135,7 @@
       : isPathActive(globalPath, root, path, depth)
   }
 
-  type GetId = () => number
-
-  const getId: GetId = (() => {
-    let id = 0
-    return () => id++
-  })()
+  const getId = createIdIssuer()
 
   const routeContextKey = {}
   const childRoutesContextKey = {}
