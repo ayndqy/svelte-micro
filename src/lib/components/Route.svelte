@@ -38,7 +38,7 @@
         pathInsideFallback: `<Route path="${route?.path}" /> cannot be inside <Route fallback>`,
       }
 
-      if (route.path.substring(0, 1) !== '/') throw new Error(messages.invalidPath)
+      if (route.path[0] !== '/') throw new Error(messages.invalidPath)
       if (route.root && route.fallback) throw new Error(messages.fallbackOutsideRoot)
       if (route.root && route.path !== '/') throw new Error(messages.pathOutsideRoot)
       if (contextRoute?.fallback && route.fallback) throw new Error(messages.fallbackInsideFallback)
@@ -106,7 +106,7 @@
       let globalPathSegments = getPathSegments(globalPath).filter((path) => path !== '/')
       let hasActiveSiblingRoutes = false
 
-      for (let i = 0; i < contextChildren?.length; i++) {
+      for (let i = 0; i < contextChildren?.length || !hasActiveSiblingRoutes; i++) {
         if (contextChildren[i]?.fallback) continue
 
         hasActiveSiblingRoutes = isPathActive(
@@ -115,8 +115,6 @@
           contextChildren[i]?.path ?? '',
           contextChildren[i]?.depth ?? 0
         )
-
-        if (hasActiveSiblingRoutes) break
       }
 
       return globalPathSegments.length >= depth && !hasActiveSiblingRoutes
