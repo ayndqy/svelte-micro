@@ -106,7 +106,7 @@
       let globalPathSegments = getPathSegments(globalPath).filter((path) => path !== '/')
       let hasActiveSiblingRoutes = false
 
-      for (let i = 0; i < contextChildren?.length || !hasActiveSiblingRoutes; i++) {
+      for (let i = 0; i < contextChildren?.length && !hasActiveSiblingRoutes; i++) {
         if (contextChildren[i]?.fallback) continue
 
         hasActiveSiblingRoutes = isPathActive(
