@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -22,7 +22,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./dist/index.js"
+    ".": {
+      "svelte": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "npx svelte-kit sync && npx svelte-package --input ./src --output ./dist --types",
