@@ -1,6 +1,6 @@
 {
   "name": "svelte-micro",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "description": "Light & reactive router for Svelte",
   "author": "ayndqy",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "svelte": "^3.54.0 || ^4.0.0"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^1.27.0",
+    "@sveltejs/kit": "^2.4.0",
     "@sveltejs/package": "^2.2.0",
     "svelte-check": "^3.6.0",
     "tslib": "^2.6.0",
