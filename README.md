@@ -2,6 +2,8 @@
 
 Light & reactive client-side router for Svelte
 
+[Announcement of svelte-micro v3](./Announcement.md)
+
 ## Table of content
 
 - [Installation](#installation)
