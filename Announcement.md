@@ -15,7 +15,7 @@ Therefore, the version 2 will not be rewritten for Svelte 5, only receiving main
 ## Version 3
 
 The version 3 will be rewritten to support Svelte 5.
-The architecture of the library will remain flexible and minimalist, as well as the library itself will remain be lightweight.
+The architecture of the library will remain flexible and minimalist, as well as the library itself will remain lightweight.
 
 Considering new features and improvements of Svelte 5, some of them could be beneficial for the library, including:
 
